@@ -1,0 +1,877 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Math Quest: Petualangan Fungsi Cambridge</title>
+    <!-- Tailwind CSS for vibrant styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- KaTeX for beautiful math equations -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@300..700&family=Quicksand:wght@300..700&display=swap');
+        
+        body {
+            font-family: 'Quicksand', sans-serif;
+            background: linear-gradient(135deg, #f0fdf4 0%, #ecfeff 50%, #e0f2fe 100%);
+        }
+        h1, h2, h3, .font-title {
+            font-family: 'Fredoka', sans-serif;
+        }
+        .quest-card {
+            box-shadow: 0 15px 30px rgba(14, 165, 233, 0.15);
+            border: 3px solid #e0f2fe;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .quest-card:hover {
+            transform: translateY(-5px);
+        }
+        .step-node {
+            transition: all 0.2s ease;
+        }
+        .step-node:hover {
+            transform: scale(1.15);
+        }
+        /* Custom scrollbar for beautiful UI */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between text-slate-800">
+
+    <!-- Top Progress & Header Bar -->
+    <header class="bg-white/80 backdrop-blur-md border-b-4 border-sky-100 sticky top-0 z-50 px-6 py-4 shadow-sm">
+        <div class="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
+            <div class="flex items-center gap-3">
+                <div class="bg-gradient-to-tr from-amber-400 to-orange-500 p-2.5 rounded-2xl shadow-md text-white animate-bounce">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                </div>
+                <div>
+                    <h1 class="text-2xl font-bold text-sky-600 tracking-wide">MATH QUEST: ALGEBRA HERO</h1>
+                    <p class="text-xs font-semibold text-emerald-500 tracking-wider uppercase">Cambridge Syllabus • Target SMA Favorit</p>
+                </div>
+            </div>
+            
+            <!-- Progress Status -->
+            <div class="flex items-center gap-4 w-full md:w-auto max-w-md">
+                <span class="text-sm font-bold text-sky-500 shrink-0">Progress Quest:</span>
+                <div class="w-full bg-slate-100 rounded-full h-4 p-0.5 border-2 border-sky-100">
+                    <div id="questProgressBar" class="bg-gradient-to-r from-emerald-400 to-sky-500 h-full rounded-full transition-all duration-300" style="width: 3%"></div>
+                </div>
+                <span id="questStepCounter" class="text-sm font-black text-slate-700 shrink-0">1 / 35</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Interactive Map Dashboard & Stage Viewer -->
+    <main class="max-w-6xl w-full mx-auto p-4 md:p-6 flex-grow flex flex-col gap-6">
+        
+        <!-- Step Map Hub -->
+        <div class="bg-white p-5 rounded-3xl border-4 border-sky-100 shadow-md">
+            <h3 class="text-sm font-black text-sky-500 mb-3 uppercase tracking-wider flex items-center gap-2">
+                <span>🗺️ Peta Petualangan (35 Level Kompetensi)</span>
+            </h3>
+            <!-- Grid of 35 Steps -->
+            <div id="adventureMap" class="grid grid-cols-7 sm:grid-cols-12 md:grid-cols-12 lg:grid-cols-12 xl:grid-cols-12 gap-2 text-center">
+                <!-- Javascript will inject 35 beautiful circular nodes here -->
+            </div>
+        </div>
+
+        <!-- Main Slide Viewport -->
+        <div id="questViewport" class="flex-grow flex items-center justify-center">
+            
+            <!-- STEP 1: Hero Welcome -->
+            <div class="slide-step w-full quest-card bg-white p-6 md:p-10 rounded-3xl" data-step="1">
+                <div class="flex flex-col md:flex-row gap-8 items-center">
+                    <div class="flex-1">
+                        <span class="bg-amber-100 text-amber-700 px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider">Level 1: Pintu Gerbang</span>
+                        <h2 class="text-3xl md:text-4xl font-bold text-slate-800 mt-2 mb-4 leading-snug">Selamat Datang di Arena <span class="text-sky-500">Master Fungsi!</span></h2>
+                        <p class="text-lg leading-relaxed text-slate-600 mb-6">
+                            Halo calon bintang! Targetmu masuk ke SMA Pilihan berstandar internasional akan segera terwujud. Di petualangan ceria ini, kita akan melibas tuntas materi <strong>Functions (Notasi, Proses, Komposisi & Invers)</strong> dengan gaya super cepat, seru, dan penuh interaksi cerdas!
+                        </p>
+                        <div class="bg-emerald-50 border-2 border-emerald-100 p-4 rounded-2xl flex items-start gap-3">
+                            <span class="text-2xl">⚡</span>
+                            <p class="text-sm text-emerald-800 font-semibold">
+                                <strong>Fakta Sukses:</strong> Soal fungsi adalah "pintu gerbang" aljabar tingkat lanjut di kurikulum Cambridge IGCSE / O-Level. Kuasai ini, jalur tes SMA impianmu akan terasa sangat mulus!
+                            </p>
+                        </div>
+                    </div>
+                    <div class="w-full md:w-1/3 flex justify-center">
+                        <svg class="w-48 h-48 animate-pulse" viewBox="0 0 100 100">
+                            <defs>
+                                <linearGradient id="shieldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" stop-color="#38bdf8" />
+                                    <stop offset="100%" stop-color="#6366f1" />
+                                </linearGradient>
+                            </defs>
+                            <polygon points="50,5 90,25 90,75 50,95 10,75 10,25" fill="url(#shieldGrad)" />
+                            <path d="M50,15 L80,30 L80,70 L50,85 L20,70 L20,30 Z" fill="#ffffff" opacity="0.15"/>
+                            <text x="50" y="55" font-family="'Fredoka', sans-serif" font-size="24" fill="#ffffff" font-weight="bold" text-anchor="middle">f(x)</text>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+
+            <!-- STEP 2: Goal & Target -->
+            <div class="slide-step w-full quest-card bg-white p-6 md:p-10 rounded-3xl hidden" data-step="2">
+                <span class="bg-amber-100 text-amber-700 px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider">Level 2: Rencana Misi</span>
+                <h2 class="text-3xl font-bold text-slate-800 mt-2 mb-4">Target Kompetensi Cambridge</h2>
+                <p class="text-slate-600 mb-6">Inilah 4 pilar penting yang akan kamu raih hari ini:</p>
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                    <div class="bg-sky-50 border-t-4 border-sky-500 p-4 rounded-2xl">
+                        <span class="text-2xl">1️⃣</span>
+                        <h4 class="font-bold text-sky-700 mt-2 mb-1">Notasi f(x)</h4>
+                        <p class="text-xs text-slate-500">Memahami arti relasi pemetaan.</p>
+                    </div>
+                    <div class="bg-purple-50 border-t-4 border-purple-500 p-4 rounded-2xl">
+                        <span class="text-2xl">2️⃣</span>
+                        <h4 class="font-bold text-purple-700 mt-2 mb-1">Input & Output</h4>
+                        <p class="text-xs text-slate-500">Mempelajari Domain & Range.</p>
+                    </div>
+                    <div class="bg-emerald-50 border-t-4 border-emerald-500 p-4 rounded-2xl">
+                        <span class="text-2xl">3️⃣</span>
+                        <h4 class="font-bold text-emerald-700 mt-2 mb-1">Fungsi Komposisi</h4>
+                        <p class="text-xs text-slate-500">Menggabungkan dua mesin kerja.</p>
+                    </div>
+                    <div class="bg-rose-50 border-t-4 border-rose-500 p-4 rounded-2xl">
+                        <span class="text-2xl">4️⃣</span>
+                        <h4 class="font-bold text-rose-700 mt-2 mb-1">Fungsi Invers</h4>
+                        <p class="text-xs text-slate-500">Melakukan proses putar balik.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- STEP 3: Warm-up Mystery Box -->
+            <div class="slide-step w-full quest-card bg-white p-6 md:p-10 rounded-3xl hidden" data-step="3">
+                <span class="bg-pink-100 text-pink-700 px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider">Level 3: Pemanasan Otak</span>
+                <h2 class="text-3xl font-bold text-slate-800 mt-2 mb-4">Teka-Teki Kotak Ajaib</h2>
+                <p class="text-slate-600 mb-4">Bayangkan sebuah kotak ajaib. Jika kita memasukkan angka tertentu, dia akan memuntahkan angka baru berdasarkan pola misterius:</p>
+                <div class="bg-gradient-to-r from-pink-50 to-orange-50 p-5 rounded-2xl border-2 border-pink-100 mb-6 grid grid-cols-3 text-center">
+                    <div>
+                        <p class="text-xs text-slate-400 font-bold">INPUT</p>
+                        <p class="text-2xl font-bold text-slate-700">2</p>
+                    </div>
+                    <div class="text-pink-400 text-2xl font-bold">➔</div>
+                    <div>
+                        <p class="text-xs text-slate-400 font-bold">OUTPUT</p>
+                        <p class="text-2xl font-bold text-pink-600">5</p>
+                    </div>
+                </div>
+                <div class="bg-gradient-to-r from-pink-50 to-orange-50 p-5 rounded-2xl border-2 border-pink-100 mb-6 grid grid-cols-3 text-center">
+                    <div>
+                        <p class="text-2xl font-bold text-slate-700">4</p>
+                    </div>
+                    <div class="text-pink-400 text-2xl font-bold">➔</div>
+                    <div>
+                        <p class="text-2xl font-bold text-pink-600">9</p>
+                    </div>
+                </div>
+                <p class="text-slate-700 font-bold mb-4">Tebak pola di atas! Apa yang akan keluar jika inputnya adalah <span class="text-sky-500">10</span>?</p>
+                <div class="flex flex-col gap-3">
+                    <button onclick="checkAnswer(this, false, 'feedback3')" class="quiz-option text-left p-4 rounded-xl border-2 border-slate-200 hover:border-pink-500 hover:bg-pink-50 font-semibold">A. 13 (Ditambah 3)</button>
+                    <button onclick="checkAnswer(this, true, 'feedback3')" class="quiz-option text-left p-4 rounded-xl border-2 border-slate-200 hover:border-pink-500 hover:bg-pink-50 font-semibold">B. 21 (Dikali 2 lalu ditambah 1)</button>
+                    <button onclick="checkAnswer(this, false, 'feedback3')" class="quiz-option text-left p-4 rounded-xl border-2 border-slate-200 hover:border-pink-500 hover:bg-pink-50 font-semibold">C. 25 (Dikali 2,5)</button>
+                </div>
+                <div id="feedback3" class="feedback-box mt-4 p-4 rounded-2xl font-bold hidden"></div>
+            </div>
+
+            <!-- STEP 4: Warm-up Pattern Hunter -->
+            <div class="slide-step w-full quest-card bg-white p-6 md:p-10 rounded-3xl hidden" data-step="4">
+                <span class="bg-pink-100 text-pink-700 px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider">Level 4: Sang Pemburu Pola</span>
+                <h2 class="text-3xl font-bold text-slate-800 mt-2 mb-4">Menemukan Rumus Hubungan</h2>
+                <p class="text-slate-600 mb-4">Selamat! Kamu berhasil menebak pola: "dikali dua, lalu ditambah satu". Dalam matematika, hubungan atau pola teratur seperti ini disebut dengan **Fungsi**.</p>
+                <div class="bg-sky-50 p-6 rounded-2xl border-2 border-sky-100 mb-6">
+                    <p class="text-slate-700 mb-3">Jika input kita lambangkan sebagai <span class="text-sky-500 font-bold">x</span>, maka kalimat "dikali dua, lalu ditambah satu" bisa kita tulis secara matematika menjadi:</p>
+                    <p class="text-center py-3 text-3xl font-bold text-indigo-600" data-katex="f(x) = 2x + 1"></p>
+                </div>
+                <p class="text-slate-600">Simpel, bukan? Notasi di atas adalah bahasa universal para matematikawan di seluruh dunia!</p>
+            </div>
+
+            <!-- STEP 5: Real World Connection - Game Design -->
+            <div class="slide-step w-full quest-card bg-white p-6 md:p-10 rounded-3xl hidden" data-step="5">
+                <span class="bg-purple-100 text-purple-700 px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider">Level 5: Dunia Nyata</span>
+                <h2 class="text-3xl font-bold text-slate-800 mt-2 mb-4">Aplikasi Fungsi pada Sistem EXP Game</h2>
+                <p class="text-slate-600 mb-4">Bagaimana developer game menentukan EXP (Experience Points) yang kamu butuhkan untuk naik level? Mereka menggunakan rumus fungsi matematika!</p>
+                <div class="bg-gradient-to-r from-purple-100 to-indigo-100 p-6 rounded-2xl mb-4 flex items-center gap-6">
+                    <div class="bg-white p-4 rounded-xl shadow-inner font-bold text-indigo-600 text-center">
+                        <p class="text-xs text-slate-400">RUMUS EXP</p>
+                        <p class="text-xl" data-katex="E(L) = 100 \times L^2"></p>
+                    </div>
+                    <div class="text-sm text-slate-700 leading-relaxed">
+                        Jika kamu berada pada <strong>Level 5</strong> (<span data-katex="L = 5"></span>), sistem komputer game secara instan memproses:<br>
+                        <span class="font-bold text-indigo-700" data-katex="E(5) = 100 \times 5^2 = 2500"></span> poin EXP untuk naik level!
+                    </div>
+                </div>
+                <p class="text-slate-600">Fungsi membantu game menghitung EXP jutaan pemain secara otomatis dan tanpa kesalahan.</p>
+            </div>
+
+            <!-- STEP 6: What is a Relation? -->
+            <div class="slide-step w-full quest-card bg-white p-6 md:p-10 rounded-3xl hidden" data-step="6">
+                <span class="bg-sky-100 text-sky-700 px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider">Level 6: Teori Relasi</span>
+                <h2 class="text-3xl font-bold text-slate-800 mt-2 mb-4">Relasi (Relation) vs Fungsi (Function)</h2>
+                <p class="text-slate-600 mb-4">Sebelum masuk ke fungsi secara formal, kita harus mengerti apa itu <strong>Relasi</strong>. Relasi adalah aturan apa pun yang menghubungkan anggota suatu kelompok ke kelompok lainnya.</p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="bg-emerald-50 p-4 rounded-2xl border-2 border-emerald-100">
+                        <h4 class="font-bold text-emerald-800 mb-1">Contoh Relasi</h4>
+                        <p class="text-sm text-slate-600">Relasi "Makanan Kesukaan": Budi suka Pizza dan Burger. (Satu anak bisa terhubung ke banyak makanan).</p>
+                    </div>
+                    <div class="bg-amber-50 p-4 rounded-2xl border-2 border-amber-100">
+                        <h4 class="font-bold text-amber-800 mb-1">Contoh Fungsi</h4>
+                        <p class="text-sm text-slate-600">Relasi "Tinggi Badan": Setiap anak pasti hanya memiliki tepat satu ukuran tinggi badan saat diukur.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- STEP 7: The One-to-One Rule -->
+            <div class="slide-step w-full quest-card bg-white p-6 md:p-10 rounded-3xl hidden" data-step="7">
+                <span class="bg-sky-100 text-sky-700 px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider">Level 7: Aturan Emas</span>
+                <h2 class="text-3xl font-bold text-slate-800 mt-2 mb-4">Aturan Emas Fungsi</h2>
+                <p class="text-slate-600 mb-4">Di kurikulum Cambridge, syarat utama suatu relasi disebut **Function** adalah:</p>
+                <div class="bg-rose-50 border-l-4 border-rose-500 p-6 rounded-r-2xl mb-4">
+                    <p class="text-lg font-bold text-rose-800">"Setiap input HANYA boleh terhubung ke TEPAT SATU output."</p>
+                </div>
+                <p class="text-slate-600 mb-4">Jenis relasi yang diperbolehkan menjadi fungsi:</p>
+                <ul class="list-disc pl-6 text-slate-700 space-y-2">
+                    <li><strong>One-to-One:</strong> Setiap satu input punya satu pasangan unik di output.</li>
+                    <li><strong>Many-to-One:</strong> Beberapa input berbeda boleh memiliki nilai output yang sama (misal: dua orang berbeda memiliki hobi yang sama).</li>
+                </ul>
+            </div>
+
+            <!-- STEP 8: Mapping Diagrams -->
+            <div class="slide-step w-full quest-card bg-white p-6 md:p-10 rounded-3xl hidden" data-step="8">
+                <span class="bg-sky-100 text-sky-700 px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider">Level 8: Diagram Pemetaan</span>
+                <h2 class="text-3xl font-bold text-slate-800 mt-2 mb-4">Visualisasi Pemetaan (Mapping)</h2>
+                <p class="text-slate-600 mb-4">Perhatikan diagram panah di bawah ini yang memetakan Himpunan A (Input) ke Himpunan B (Output):</p>
+                <div class="flex justify-center items-center gap-8 bg-slate-50 p-6 rounded-3xl border-2 border-slate-100">
+                    <div class="flex flex-col gap-2">
+                        <p class="text-xs font-black text-indigo-500 text-center">INPUT</p>
+                        <span class="bg-white px-4 py-2 rounded-xl shadow-sm border border-slate-200 font-bold text-center">1</span>
+                        <span class="bg-white px-4 py-2 rounded-xl shadow-sm border border-slate-200 font-bold text-center">2</span>
+                        <span class="bg-white px-4 py-2 rounded-xl shadow-sm border border-slate-200 font-bold text-center">3</span>
+                    </div>
+                    <div class="text-indigo-400 text-2xl flex flex-col justify-around h-24">➔</div>
+                    <div class="flex flex-col gap-2">
+                        <p class="text-xs font-black text-emerald-500 text-center">OUTPUT</p>
+                        <span class="bg-white px-4 py-2 rounded-xl shadow-sm border border-slate-200 font-bold text-center">4</span>
+                        <span class="bg-white px-4 py-2 rounded-xl shadow-sm border border-slate-200 font-bold text-center">5</span>
+                        <span class="bg-white px-4 py-2 rounded-xl shadow-sm border border-slate-200 font-bold text-center">6</span>
+                    </div>
+                </div>
+                <p class="text-slate-600 mt-4">Karena setiap anggota input di sebelah kiri hanya menunjuk ke tepat satu anggota output di sebelah kanan, ini dikategorikan sebagai fungsi!</p>
+            </div>
+
+            <!-- STEP 9: Interactive Classification -->
+            <div class="slide-step w-full quest-card bg-white p-6 md:p-10 rounded-3xl hidden" data-step="9">
+                <span class="bg-orange-100 text-orange-700 px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider">Level 9: Kuis Identifikasi</span>
+                <h2 class="text-3xl font-bold text-slate-800 mt-2 mb-4">Mana yang merupakan Fungsi?</h2>
+                <p class="text-slate-600 mb-4">Amatilah jenis hubungan relasi di bawah ini:</p>
+                <div class="flex flex-col gap-3">
+                    <button onclick="checkAnswer(this, false, 'feedback9')" class="quiz-option text-left p-4 rounded-xl border-2 border-slate-200 hover:border-orange-500 hover:bg-orange-50 font-semibold">A. Relasi di mana input "2" menghasilkan dua output berbeda yaitu "5" dan "8".</button>
+                    <button onclick="checkAnswer(this, true, 'feedback9')" class="quiz-option text-left p-4 rounded-xl border-2 border-slate-200 hover:border-orange-500 hover:bg-orange-50 font-semibold">B. Relasi di mana input "3" menghasilkan "7" dan input "4" juga menghasilkan "7".</button>
+                </div>
+                <div id="feedback9" class="feedback-box mt-4 p-4 rounded-2xl font-bold hidden"></div>
+            </div>
+
+            <!-- STEP 10: Vending Machine Logic -->
+            <div class="slide-step w-full quest-card bg-white p-6 md:p-10 rounded-3xl hidden" data-step="10">
+                <span class="bg-purple-100 text-purple-700 px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider">Level 10: Analogi Mesin</span>
+                <h2 class="text-3xl font-bold text-slate-800 mt-2 mb-4">Logika Mesin Minuman (Vending Machine)</h2>
+                <p class="text-slate-600 mb-4">Bayangkan kamu menekan tombol minuman. Tombol A1 mengeluarkan minuman Soda Dingin. Ini adalah fungsi! (1 Tombol ➔ 1 Jenis Minuman).</p>
+                <div class="bg-indigo-50 border-2 border-indigo-100 p-5 rounded-2xl flex items-center gap-4">
+                    <span class="text-4xl">🥤</span>
+                    <p class="text-sm text-indigo-900 leading-relaxed">
+                        Jika suatu hari kamu menekan tombol A1 dan mesin malah mengeluarkan Soda Dingin *sekaligus* Susu Cokelat secara acak, mesin tersebut dinyatakan rusak. Dalam matematika, hal ini berarti relasi tersebut <strong>bukan lagi merupakan fungsi</strong>!
+                    </p>
+                </div>
+            </div>
+
+            <!-- STEP 11: The f(x) Notation -->
+            <div class="slide-step w-full quest-card bg-white p-6 md:p-10 rounded-3xl hidden" data-step="11">
+                <span class="bg-emerald-100 text-emerald-700 px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider">Level 11: Notasi Formal</span>
+                <h2 class="text-3xl font-bold text-slate-800 mt-2 mb-4">Membaca Notasi <span class="text-emerald-500" data-katex="f(x)"></span></h2>
+                <p class="text-slate-600 mb-4">Di jenjang SD/Awal SMP, kamu menuliskan garis linear seperti:</p>
+                <p class="text-center py-2 text-2xl font-bold text-slate-700" data-katex="y = 3x - 5"></p>
+                <p class="text-slate-600 mb-4">Sekarang, di kurikulum Cambridge, kita ganti huruf <span data-katex="y"></span> dengan lambang <span class="text-emerald-600 font-bold" data-katex="f(x)"></span>:</p>
+                <p class="text-center py-2 text-2xl font-bold text-emerald-600" data-katex="f(x) = 3x - 5"></p>
+                <p class="text-slate-600">Simbol ini diucapkan: <strong>"f of x"</strong> (fungsi f dengan masukan variabel x).</p>
+            </div>
+
+            <!-- STEP 12: Alternate Notation Mapping -->
+            <div class="slide-step w-full quest-card bg-white p-6 md:p-10 rounded-3xl hidden" data-step="12">
+                <span class="bg-emerald-100 text-emerald-700 px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider">Level 12: Variasi Notasi</span>
+                <h2 class="text-3xl font-bold text-slate-800 mt-2 mb-4">Notasi Pemetaan Alternatif</h2>
+                <p class="text-slate-600 mb-4">Jangan kaget saat melihat notasi matematika di ujian Cambridge yang ditulis dengan tanda panah seperti ini:</p>
+                <div class="bg-emerald-50 p-6 rounded-2xl border-2 border-emerald-100 text-center">
+                    <p class="text-2xl font-bold text-emerald-700" data-katex="f : x \mapsto 4x + 7"></p>
+                </div>
+                <p class="text-slate-600 mt-4">Artinya sama persis! Dibaca: "Fungsi f memetakan nilai <span data-katex="x"></span> menuju nilai baru <span data-katex="4x + 7"></span>". Keduanya mewakili fungsi linear yang serupa.</p>
+            </div>
+
+            <!-- STEP 13: Domain Territory -->
+            <div class="slide-step w-full quest-card bg-white p-6 md:p-10 rounded-3xl hidden" data-step="13">
+                <span class="bg-emerald-100 text-emerald-700 px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider">Level 13: Wilayah Domain</span>
+                <h2 class="text-3xl font-bold text-slate-800 mt-2 mb-4">Domain (Daerah Asal)</h2>
+                <p class="text-slate-600 mb-4"><strong>Domain</strong> adalah kumpulan seluruh nilai input (<span data-katex="x"></span>) yang sah dan boleh dimasukkan ke dalam suatu fungsi.</p>
+                <div class="bg-amber-50 border-l-4 border-amber-500 p-5 rounded-r-2xl mb-4">
+                    <h4 class="font-bold text-amber-800 mb-1">Contoh Kasus Ekstrim:</h4>
+                    <p class="text-sm text-slate-700" data-katex="f(x) = \frac{5}{x-3}"></p>
+                    <p class="text-xs text-slate-500 mt-2">Untuk fungsi pecahan ini, nilai <span data-katex="x"></span> tidak boleh bernilai <span class="font-bold">3</span> karena akan menyebabkan penyebut bernilai nol (tidak terdefinisi). Maka domainnya ditulis: <span class="font-bold text-emerald-600" data-katex="x \neq 3"></span>.</p>
+                </div>
+            </div>
+
+            <!-- STEP 14: Range Realm -->
+            <div class="slide-step w-full quest-card bg-white p-6 md:p-10 rounded-3xl hidden" data-step="14">
+                <span class="bg-emerald-100 text-emerald-700 px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider">Level 14: Daerah Hasil</span>
+                <h2 class="text-3xl font-bold text-slate-800 mt-2 mb-4">Range (Daerah Hasil)</h2>
+                <p class="text-slate-600 mb-4"><strong>Range</strong> adalah kumpulan semua nilai hasil (output) nyata yang diperoleh setelah seluruh nilai Domain dimasukkan ke dalam mesin fungsi.</p>
+                <div class="bg-sky-50 border-l-4 border-sky-500 p-5 rounded-r-2xl">
+                    <h4 class="font-bold text-sky-800 mb-1">Contoh Fungsi Kuadrat:</h4>
+                    <p class="text-sm text-slate-700" data-katex="f(x) = x^2"></p>
+                    <p class="text-xs text-slate-500 mt-2">Karena kuadrat dari bilangan apa pun tidak pernah bernilai negatif, maka daerah hasil (Range) untuk seluruh bilangan real input adalah: <span class="font-bold text-sky-600" data-katex="f(x) \geq 0"></span>.</p>
+                </div>
+            </div>
+
+            <!-- STEP 15: Quick Matcher -->
+            <div class="slide-step w-full quest-card bg-white p-6 md:p-10 rounded-3xl hidden" data-step="15">
+                <span class="bg-orange-100 text-orange-700 px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider">Level 15: Kuis Cepat</span>
+                <h2 class="text-3xl font-bold text-slate-800 mt-2 mb-4">Kuis: Mengidentifikasi Domain Terlarang</h2>
+                <p class="text-slate-600 mb-4">Perhatikan fungsi pecahan berikut: <br><span class="text-lg font-bold" data-katex="g(x) = \frac{10}{x+5}"></span></p>
+                <p class="text-slate-700 mb-4 font-bold">Berapakah nilai input yang dilarang berada di dalam Domain?</p>
+                <div class="flex flex-col gap-3">
+                    <button onclick="checkAnswer(this, false, 'feedback15')" class="quiz-option text-left p-4 rounded-xl border-2 border-slate-200 hover:border-orange-500 hover:bg-orange-50 font-semibold">A. x = 5</button>
+                    <button onclick="checkAnswer(this, true, 'feedback15')" class="quiz-option text-left p-4 rounded-xl border-2 border-slate-200 hover:border-orange-500 hover:bg-orange-50 font-semibold">B. x = -5</button>
+                    <button onclick="checkAnswer(this, false, 'feedback15')" class="quiz-option text-left p-4 rounded-xl border-2 border-slate-200 hover:border-orange-500 hover:bg-orange-50 font-semibold">C. x = 0</button>
+                </div>
+                <div id="feedback15" class="feedback-box mt-4 p-4 rounded-2xl font-bold hidden"></div>
+            </div>
+
+            <!-- STEP 16: Interactive Machine Simulation -->
+            <div class="slide-step w-full quest-card bg-white p-6 md:p-10 rounded-3xl hidden" data-step="16">
+                <span class="bg-amber-100 text-amber-700 px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider">Level 16: Simulator Mesin</span>
+                <h2 class="text-3xl font-bold text-slate-800 mt-2 mb-4">Eksperimen Mesin Fungsi Interaktif</h2>
+                <p class="text-slate-600 mb-4">Mari kita uji coba mesin fungsi linear kita secara langsung. Aturan mesin saat ini: <br><span class="text-lg font-bold text-indigo-600" data-katex="f(x) = 3x - 4"></span></p>
+                
+                <div class="bg-indigo-50 p-6 rounded-3xl border-4 border-indigo-100 flex flex-col sm:flex-row items-center justify-around gap-6 my-4">
+                    <div class="text-center">
+                        <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Geser Input (x)</label>
+                        <input type="range" id="sandboxXRange" min="-10" max="10" value="4" class="w-48 accent-indigo-600 cursor-pointer" oninput="runSandboxSimulation()">
+                        <span id="sandboxValX" class="block text-3xl font-black text-indigo-600 mt-2">4</span>
+                    </div>
+                    <div class="bg-indigo-600 text-white px-6 py-4 rounded-2xl font-bold text-center shadow-lg">
+                        <p class="text-xs opacity-75">MESIN PROSES</p>
+                        <p class="text-xl">3x - 4</p>
+                    </div>
+                    <div class="text-center">
+                        <p class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Hasil Output f(x)</p>
+                        <span id="sandboxValY" class="block text-4xl font-black text-emerald-500">8</span>
+                    </div>
+                </div>
+                <p class="text-sm text-slate-500">Geser slider di atas ke kiri dan kanan untuk melihat bagaimana nilai input secara konstan merubah output!</p>
+            </div>
+
+            <!-- STEP 17: Positive & Negative Inputs -->
+            <div class="slide-step w-full quest-card bg-white p-6 md:p-10 rounded-3xl hidden" data-step="17">
+                <span class="bg-emerald-100 text-emerald-700 px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider">Level 17: Hati-Hati Tanda</span>
+                <h2 class="text-3xl font-bold text-slate-800 mt-2 mb-4">Awas Ranjau Tanda Negatif!</h2>
+                <p class="text-slate-600 mb-4">Banyak calon siswa terjebak pada operasi matematika bilangan negatif. Mari pelajari contoh penting ini:</p>
+                <div class="bg-rose-50 border-2 border-rose-100 p-6 rounded-2xl mb-4">
+                    <p class="text-slate-700 font-bold mb-2">Fungsi: <span data-katex="h(x) = 12 - 5x"></span>. Hitung nilai <span data-katex="h(-2)"></span>!</p>
+                    <p class="text-slate-600"><strong>Penyelesaian Detail:</strong></p>
+                    <p class="text-xl font-bold text-rose-700 mt-2" data-katex="h(-2) = 12 - 5(-2)"></p>
+                    <p class="text-xl font-bold text-rose-700" data-katex="h(-2) = 12 + 10 = 22"></p>
+                </div>
+                <p class="text-slate-600">Ingat, minus dikali minus menghasilkan nilai positif!</p>
+            </div>
+
+            <!-- STEP 18: Algebraic Inputs -->
+            <div class="slide-step w-full quest-card bg-white p-6 md:p-10 rounded-3xl hidden" data-step="18">
+                <span class="bg-indigo-100 text-indigo-700 px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider">Level 18: Level Up Aljabar</span>
+                <h2 class="text-3xl font-bold text-slate-800 mt-2 mb-4">Memasukkan Variabel Aljabar</h2>
+                <p class="text-slate-600 mb-4">Anak pintar yang ingin masuk SMA unggulan harus siap melangkah lebih jauh. Bagaimana jika inputnya bukan lagi berupa angka konkrit, melainkan huruf aljabar baru?</p>
+                <div class="bg-slate-50 p-6 rounded-2xl border-2 border-slate-100 mb-4">
+                    <p class="text-slate-700 font-semibold mb-2">Diketahui: <span data-katex="f(x) = 3x + 1"></span>. Berapakah nilai dari <span data-katex="f(2a)"></span>?</p>
+                    <p class="text-slate-600"><strong>Solusi Cerdas:</strong> Ganti saja setiap variabel <span data-katex="x"></span> pada fungsi awal dengan kesatuan nilai <span data-katex="(2a)"></span>:</p>
+                    <p class="text-center py-2 text-2xl font-bold text-indigo-600" data-katex="f(2a) = 3(2a) + 1 = 6a + 1"></p>
+                </div>
+                <p class="text-slate-600">Metodenya tetap sama persis: proses substitusi langsung!</p>
+            </div>
+
+            <!-- STEP 19: Step-by-Step f(2x-3) -->
+            <div class="slide-step w-full quest-card bg-white p-6 md:p-10 rounded-3xl hidden" data-step="19">
+                <span class="bg-indigo-100 text-indigo-700 px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider">Level 19: Aljabar Kompleks</span>
+                <h2 class="text-3xl font-bold text-slate-800 mt-2 mb-4">Substitusi Aljabar Bersusun</h2>
+                <p class="text-slate-600 mb-4">Mari kita naikkan level kesulitannya. Selesaikan langkah ini bersama-sama:</p>
+                <div class="bg-indigo-50 border-l-4 border-indigo-500 p-6 rounded-r-2xl mb-4">
+                    <p class="text-slate-700 font-semibold mb-2">Diketahui: <span data-katex="f(x) = 2x - 5"></span>. Cari ekspresi tersederhana untuk <span data-katex="f(x+3)"></span>!</p>
+                    <p class="text-slate-600"><strong>Langkah demi langkah:</strong></p>
+                    <p class="font-bold text-indigo-700 mt-2" data-katex="f(x+3) = 2(x+3) - 5"></p>
+                    <p class="font-bold text-indigo-700" data-katex="f(x+3) = 2x + 6 - 5 = 2x + 1"></p>
+                </div>
+                <p class="text-slate-600">Dengan menyebarkan perkalian dalam kurung, kita mendapatkan rumus fungsi yang baru.</p>
+            </div>
+
+            <!-- STEP 20: Practice Input Challenge -->
+            <div class="slide-step w-full quest-card bg-white p-6 md:p-10 rounded-3xl hidden" data-step="20">
+                <span class="bg-orange-100 text-orange-700 px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider">Level 20: Kuis Aljabar</span>
+                <h2 class="text-3xl font-bold text-slate-800 mt-2 mb-4">Uji Nyali: Substitusi Aljabar</h2>
+                <p class="text-slate-600 mb-4">Diketahui fungsi <span class="font-semibold" data-katex="g(x) = 4x - 3"></span>. Manakah di bawah ini yang merupakan ekspresi yang benar untuk <span class="font-semibold" data-katex="g(3b)"></span>?</p>
+                <div class="flex flex-col gap-3">
+                    <button onclick="checkAnswer(this, false, 'feedback20')" class="quiz-option text-left p-4 rounded-xl border-2 border-slate-200 hover:border-orange-500 hover:bg-orange-50 font-semibold">A. 12b - 9</button>
+                    <button onclick="checkAnswer(this, true, 'feedback20')" class="quiz-option text-left p-4 rounded-xl border-2 border-slate-200 hover:border-orange-500 hover:bg-orange-50 font-semibold">B. 12b - 3</button>
+                    <button onclick="checkAnswer(this, false, 'feedback20')" class="quiz-option text-left p-4 rounded-xl border-2 border-slate-200 hover:border-orange-500 hover:bg-orange-50 font-semibold">C. 4b - 3</button>
+                </div>
+                <div id="feedback20" class="feedback-box mt-4 p-4 rounded-2xl font-bold hidden"></div>
+            </div>
+
+            <!-- STEP 21: Chain Reaction Concept -->
+            <div class="slide-step w-full quest-card bg-white p-6 md:p-10 rounded-3xl hidden" data-step="21">
+                <span class="bg-emerald-100 text-emerald-700 px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider">Level 21: Fungsi Komposisi</span>
+                <h2 class="text-3xl font-bold text-slate-800 mt-2 mb-4">Reaksi Berantai Fungsi Komposisi</h2>
+                <p class="text-slate-600 mb-4">Bagaimana jika kita meletakkan dua mesin fungsi secara berurutan? Output dari mesin pertama langsung dimasukkan sebagai input untuk mesin kedua.</p>
+                <div class="flex justify-center items-center gap-4 bg-emerald-50 p-6 rounded-3xl border-2 border-emerald-100 my-4">
+                    <div class="text-center bg-white p-3 rounded-xl shadow-sm">
+                        <span class="text-xs text-slate-400 font-bold">Input x</span>
+                    </div>
+                    <span class="text-emerald-400">➔</span>
+                    <div class="bg-emerald-500 text-white p-3 rounded-xl shadow-md font-bold">Mesin g(x)</div>
+                    <span class="text-emerald-400">➔</span>
+                    <div class="bg-indigo-500 text-white p-3 rounded-xl shadow-md font-bold">Mesin f(x)</div>
+                    <span class="text-emerald-400">➔</span>
+                    <div class="text-center bg-white p-3 rounded-xl shadow-sm">
+                        <span class="text-xs text-slate-400 font-bold">Output Akhir</span>
+                    </div>
+                </div>
+                <p class="text-slate-600">Proses berantai penyatuan dua mesin ini disebut sebagai **Composite Functions**.</p>
+            </div>
+
+            <!-- STEP 22: Notation fg(x) vs gf(x) -->
+            <div class="slide-step w-full quest-card bg-white p-6 md:p-10 rounded-3xl hidden" data-step="22">
+                <span class="bg-emerald-100 text-emerald-700 px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider">Level 22: Notasi Komposisi</span>
+                <h2 class="text-3xl font-bold text-slate-800 mt-2 mb-4">Aturan Urutan Kerja: Kanan ke Kiri!</h2>
+                <p class="text-slate-600 mb-4">Dalam notasi fungsi komposisi Cambridge:</p>
+                <div class="bg-slate-50 p-6 rounded-2xl border-2 border-slate-100 mb-4 text-center">
+                    <p class="text-3xl font-bold text-indigo-600" data-katex="fg(x) = f(g(x))"></p>
+                </div>
+                <div class="bg-amber-50 border-l-4 border-amber-500 p-4 rounded-r-2xl text-sm">
+                    ⚠️ <strong>PENTING:</strong> Urutan pengerjaannya adalah dimulai dari kanan ke kiri! Pada bentuk <span data-katex="fg(x)"></span>, hitung dulu nilai fungsi <span data-katex="g(x)"></span>, lalu hasilnya dimasukkan ke dalam fungsi <span data-katex="f"></span>.
+                </div>
+            </div>
+
+            <!-- STEP 23: Order Matters Proof -->
+            <div class="slide-step w-full quest-card bg-white p-6 md:p-10 rounded-3xl hidden" data-step="23">
+                <span class="bg-rose-100 text-rose-700 px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider">Level 23: Pembuktian Urutan</span>
+                <h2 class="text-3xl font-bold text-slate-800 mt-2 mb-4">Apakah <span data-katex="fg(x)"></span> sama dengan <span data-katex="gf(x)"></span>?</h2>
+                <p class="text-slate-600 mb-4">Mari buktikan bersama menggunakan dua fungsi sederhana ini:</p>
+                <div class="grid grid-cols-2 gap-4 mb-4 text-center">
+                    <div class="bg-sky-50 p-3 rounded-xl border border-sky-100" data-katex="f(x) = x + 3"></div>
+                    <div class="bg-purple-50 p-3 rounded-xl border border-purple-100" data-katex="g(x) = 2x"></div>
+                </div>
+                <div class="bg-slate-50 p-5 rounded-2xl space-y-2">
+                    <p class="text-sm">1. Rumus untuk <span class="font-bold text-indigo-600" data-katex="fg(x)"></span>:</p>
+                    <p class="text-md font-bold" data-katex="fg(x) = f(2x) = 2x + 3"></p>
+                    <p class="text-sm pt-2">2. Rumus untuk <span class="font-bold text-indigo-600" data-katex="gf(x)"></span>:</p>
+                    <p class="text-md font-bold" data-katex="gf(x) = g(x+3) = 2(x+3) = 2x + 6"></p>
+                </div>
+                <p class="text-slate-600 mt-4">Terbukti bahwa <span class="font-bold text-rose-600" data-katex="fg(x) \neq gf(x)"></span>! Urutan penggabungan sangat menentukan hasil akhir.</p>
+            </div>
+
+            <!-- STEP 24: Calculating fg(3) -->
+            <div class="slide-step w-full quest-card bg-white p-6 md:p-10 rounded-3xl hidden" data-step="24">
+                <span class="bg-emerald-100 text-emerald-700 px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider">Level 24: Contoh Nilai Komposisi</span>
+                <h2 class="text-3xl font-bold text-slate-800 mt-2 mb-4">Menghitung Nilai <span data-katex="fg(3)"></span></h2>
+                <p class="text-slate-600 mb-4">Bagaimana cara menghitung nilai kombinasi angka secara cepat? Mari gunakan fungsi sebelumnya:</p>
+                <div class="bg-slate-50 p-5 rounded-2xl border-2 border-slate-100 mb-4">
+                    <p class="text-slate-700 font-bold mb-3">Misi: Cari nilai dari <span data-katex="fg(5)"></span> jika <span data-katex="f(x) = x + 3"></span> dan <span data-katex="g(x) = 2x"></span>.</p>
+                    <p class="text-sm"><strong>Langkah 1:</strong> Cari nilai dari fungsi paling dalam dahulu: <span class="font-bold text-sky-600" data-katex="g(5)"></span>.</p>
+                    <p class="text-md font-bold" data-katex="g(5) = 2 \times 5 = 10"></p>
+                    <p class="text-sm mt-3"><strong>Langkah 2:</strong> Masukkan hasil angka 10 tersebut ke dalam fungsi luar <span class="font-bold text-indigo-600" data-katex="f(x)"></span>:</p>
+                    <p class="text-md font-bold" data-katex="f(10) = 10 + 3 = 13"></p>
+                </div>
+                <p class="text-slate-600">Jadi hasil akhir dari <span class="font-bold text-emerald-600" data-katex="fg(5)"></span> adalah <span class="font-bold text-emerald-600">13</span>!</p>
+            </div>
+
+            <!-- STEP 25: Composite Function Practice -->
+            <div class="slide-step w-full quest-card bg-white p-6 md:p-10 rounded-3xl hidden" data-step="25">
+                <span class="bg-orange-100 text-orange-700 px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider">Level 25: Kuis Komposisi</span>
+                <h2 class="text-3xl font-bold text-slate-800 mt-2 mb-4">Kuis Mandiri Komposisi</h2>
+                <p class="text-slate-600 mb-4">Diberikan <span class="font-semibold" data-katex="f(x) = x^2"></span> dan <span class="font-semibold" data-katex="g(x) = x - 4"></span>. Berapakah hasil nilai dari <span class="font-bold" data-katex="fg(6)"></span>?</p>
+                <div class="flex flex-col gap-3">
+                    <button onclick="checkAnswer(this, false, 'feedback25')" class="quiz-option text-left p-4 rounded-xl border-2 border-slate-200 hover:border-orange-500 hover:bg-orange-50 font-semibold">A. 32</button>
+                    <button onclick="checkAnswer(this, true, 'feedback25')" class="quiz-option text-left p-4 rounded-xl border-2 border-slate-200 hover:border-orange-500 hover:bg-orange-50 font-semibold">B. 4</button>
+                    <button onclick="checkAnswer(this, false, 'feedback25')" class="quiz-option text-left p-4 rounded-xl border-2 border-slate-200 hover:border-orange-500 hover:bg-orange-50 font-semibold">C. 16</button>
+                </div>
+                <div id="feedback25" class="feedback-box mt-4 p-4 rounded-2xl font-bold hidden"></div>
+            </div>
+
+            <!-- STEP 26: Concept of Inverse (Time Machine) -->
+            <div class="slide-step w-full quest-card bg-white p-6 md:p-10 rounded-3xl hidden" data-step="26">
+                <span class="bg-rose-100 text-rose-700 px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider">Level 26: Fungsi Invers</span>
+                <h2 class="text-3xl font-bold text-slate-800 mt-2 mb-4">Fungsi Invers: Mesin Waktu Putar Balik</h2>
+                <p class="text-slate-600 mb-4"><strong>Fungsi Invers</strong>, dilambangkan dengan simbol <span class="font-bold text-rose-600" data-katex="f^{-1}(x)"></span>, bertugas membalikkan seluruh proses yang dilakukan oleh fungsi asal.</p>
+                <div class="bg-gradient-to-r from-rose-50 to-orange-50 p-6 rounded-3xl text-center border-2 border-rose-100">
+                    <p class="text-slate-500 text-sm font-semibold">Hubungan Saling Membalikkan:</p>
+                    <p class="text-2xl font-black text-rose-600 my-2" data-katex="f(x) = y \iff f^{-1}(y) = x"></p>
+                    <p class="text-xs text-slate-400">Jika mesin f memetakan angka 2 menjadi 10, maka mesin invers memetakan angka 10 kembali menjadi 2.</p>
+                </div>
+            </div>
+
+            <!-- STEP 27: Notation f^-1(x) -->
+            <div class="slide-step w-full quest-card bg-white p-6 md:p-10 rounded-3xl hidden" data-step="27">
+                <span class="bg-rose-100 text-rose-700 px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider">Level 27: Aturan Penulisan</span>
+                <h2 class="text-3xl font-bold text-slate-800 mt-2 mb-4">Hati-Hati Penulisan Lambang!</h2>
+                <p class="text-slate-600 mb-4">Lambang pangkat minus satu pada invers memiliki arti yang sangat berbeda dari eksponen bilangan biasa:</p>
+                <div class="bg-rose-50 border-l-4 border-rose-500 p-6 rounded-r-2xl">
+                    <p class="text-lg font-bold text-rose-800" data-katex="f^{-1}(x) \neq \frac{1}{f(x)}"></p>
+                    <p class="text-xs text-slate-500 mt-2">Pangkat -1 pada penamaan fungsi murni menunjukkan hubungan operasi balikan / invers, bukan menunjukkan pecahan satu per nilai fungsi!</p>
+                </div>
+            </div>
+
+            <!-- STEP 28: The 3-Step Algebra Method -->
+            <div class="slide-step w-full quest-card bg-white p-6 md:p-10 rounded-3xl hidden" data-step="28">
+                <span class="bg-rose-100 text-rose-700 px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider">Level 28: Jurus Aljabar</span>
+                <h2 class="text-3xl font-bold text-slate-800 mt-2 mb-4">3 Langkah Sakti Mencari Rumus Invers</h2>
+                <p class="text-slate-600 mb-4">Mari kita kuasai cara merumuskan fungsi invers dengan 3 langkah teratur:</p>
+                <div class="space-y-3">
+                    <div class="flex items-center gap-3">
+                        <span class="bg-rose-500 text-white w-8 h-8 rounded-full flex items-center justify-center font-bold">1</span>
+                        <p class="text-sm text-slate-700">Ubah tulisan fungsi menjadi persamaan umum: <span class="font-bold" data-katex="y = f(x)"></span></p>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <span class="bg-rose-500 text-white w-8 h-8 rounded-full flex items-center justify-center font-bold">2</span>
+                        <p class="text-sm text-slate-700">Gunakan aljabar untuk menyendirikan variabel x: <span class="font-bold" data-katex="x = \dots"></p>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <span class="bg-rose-500 text-white w-8 h-8 rounded-full flex items-center justify-center font-bold">3</span>
+                        <p class="text-sm text-slate-700">Tukar kembali huruf x menjadi <span class="font-bold" data-katex="f^{-1}(x)"></span> dan ubah semua huruf y menjadi x.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- STEP 29: Interactive Inverser Machine -->
+            <div class="slide-step w-full quest-card bg-white p-6 md:p-10 rounded-3xl hidden" data-step="29">
+                <span class="bg-rose-100 text-rose-700 px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider">Level 29: Penerapan Metode</span>
+                <h2 class="text-3xl font-bold text-slate-800 mt-2 mb-4">Mari Kita Hitung Invers Linear</h2>
+                <p class="text-slate-600 mb-4"><strong>Misi:</strong> Carilah rumus invers dari fungsi <span data-katex="f(x) = 5x - 7"></span>!</p>
+                <div class="bg-indigo-50 p-6 rounded-3xl border-2 border-indigo-100">
+                    <p class="text-slate-700 font-semibold mb-2">Penyelesaian Sesuai 3 Langkah:</p>
+                    <p class="text-sm mb-1">Langkah 1: Tulis persamaan <span data-katex="y = 5x - 7"></span></p>
+                    <p class="text-sm mb-1">Langkah 2: Isolasi nilai x:</p>
+                    <p class="text-md font-bold text-indigo-700 ml-4" data-katex="y + 7 = 5x \implies x = \frac{y + 7}{5}"></p>
+                    <p class="text-sm mb-1 mt-2">Langkah 3: Ubah kembali variabelnya:</p>
+                    <p class="text-lg font-bold text-emerald-600 ml-4" data-katex="f^{-1}(x) = \frac{x + 7}{5}"></p>
+                </div>
+            </div>
+
+            <!-- STEP 30: Inverse of Fractions -->
+            <div class="slide-step w-full quest-card bg-white p-6 md:p-10 rounded-3xl hidden" data-step="30">
+                <span class="bg-rose-100 text-rose-700 px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider">Level 30: Ujian Extended</span>
+                <h2 class="text-3xl font-bold text-slate-800 mt-2 mb-4">Invers Pecahan Rasional (IGCSE Extended)</h2>
+                <p class="text-slate-600 mb-4">Inilah jenis soal dengan bobot skor tertinggi di lembar ujian Cambridge extended. Mari pecahkan bentuk pecahan rasional ini:</p>
+                <div class="bg-slate-50 p-5 rounded-2xl border-2 border-slate-100 text-center mb-4">
+                    <p class="text-xl font-bold text-indigo-600" data-katex="f(x) = \frac{x+2}{x-3}"></p>
+                </div>
+                <p class="text-slate-600 mb-2">Gunakan metode substitusi silang:</p>
+                <p class="text-center font-bold text-indigo-700" data-katex="y(x-3) = x+2 \implies yx - 3y = x + 2"></p>
+                <p class="text-center font-bold text-indigo-700" data-katex="yx - x = 3y + 2 \implies x(y-1) = 3y + 2"></p>
+                <p class="text-center font-bold text-emerald-600 text-lg" data-katex="f^{-1}(x) = \frac{3x + 2}{x - 1}"></p>
+            </div>
+
+            <!-- STEP 31: Shortcut Trik Cepat -->
+            <div class="slide-step w-full quest-card bg-white p-6 md:p-10 rounded-3xl hidden" data-step="31">
+                <span class="bg-amber-100 text-amber-700 px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider">Level 31: Trik Akselerasi</span>
+                <h2 class="text-3xl font-bold text-slate-800 mt-2 mb-4">Trik Kilat Invers Pecahan Rasional</h2>
+                <p class="text-slate-600 mb-4">Saat tes seleksi masuk SMA, waktu pengerjaan sangatlah berharga. Gunakan rumus jalan pintas ini untuk langsung mendapatkan jawaban tanpa corat-coret panjang:</p>
+                <div class="bg-amber-50 p-6 rounded-2xl border-2 border-amber-200">
+                    <p class="text-slate-700 text-sm font-bold mb-2">Jika diketahui fungsi asal:</p>
+                    <p class="text-center text-xl font-bold text-indigo-600" data-katex="f(x) = \frac{ax + b}{cx + d}"></p>
+                    <p class="text-slate-700 text-sm font-bold my-2">Maka rumus fungsi invers instannya adalah:</p>
+                    <p class="text-center text-xl font-bold text-emerald-600" data-katex="f^{-1}(x) = \frac{-dx + b}{cx - a}"></p>
+                </div>
+                <p class="text-sm text-slate-500 mt-4">Kamu hanya perlu menukar letak angka <span class="font-bold">a</span> dan <span class="font-bold">d</span>, lalu mengubah tandanya menjadi negatif (lawannya)!</p>
+            </div>
+
+            <!-- STEP 32: Reflection on the Mirror -->
+            <div class="slide-step w-full quest-card bg-white p-6 md:p-10 rounded-3xl hidden" data-step="32">
+                <span class="bg-sky-100 text-sky-700 px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider">Level 32: Geometri Grafik</span>
+                <h2 class="text-3xl font-bold text-slate-800 mt-2 mb-4">Grafik Invers Adalah Hasil Pencerminan!</h2>
+                <p class="text-slate-600 mb-4">Dalam analisis koordinat grafik Cambridge, terdapat rahasia visual yang sangat indah:</p>
+                <div class="bg-sky-50 border-2 border-sky-100 p-6 rounded-2xl mb-4 flex flex-col md:flex-row items-center gap-6">
+                    <p class="text-sm text-slate-700 leading-relaxed">
+                        Grafik fungsi invers <span class="font-bold" data-katex="y = f^{-1}(x)"></span> selalu merupakan hasil pencerminan sempurna dari grafik fungsi aslinya <span class="font-bold" data-katex="y = f(x)"></span> terhadap garis diagonal cermin utama <span class="font-bold text-indigo-600" data-katex="y = x"></span>.
+                    </p>
+                    <svg class="w-32 h-32 shrink-0 border border-slate-200 rounded-lg bg-white" viewBox="0 0 100 100">
+                        <line x1="0" y1="100" x2="100" y2="0" stroke="#f43f5e" stroke-width="2" stroke-dasharray="2,2" /> <!-- y=x -->
+                        <path d="M 10 90 Q 50 50 90 40" fill="none" stroke="#3b82f6" stroke-width="3" /> <!-- f(x) -->
+                        <path d="M 90 10 Q 50 50 40 90" fill="none" stroke="#10b981" stroke-width="3" /> <!-- f^-1(x) -->
+                    </svg>
+                </div>
+            </div>
+
+            <!-- STEP 33: Direct Inverse Values -->
+            <div class="slide-step w-full quest-card bg-white p-6 md:p-10 rounded-3xl hidden" data-step="33">
+                <span class="bg-amber-100 text-amber-700 px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider">Level 33: Trik Logika</span>
+                <h2 class="text-3xl font-bold text-slate-800 mt-2 mb-4">Menghitung Nilai Invers Tanpa Rumus</h2>
+                <p class="text-slate-600 mb-4">Tebak trik cerdik ini! Bagaimana jika soal ujian menanyakan nilai <span data-katex="f^{-1}(13)"></span>, padahal fungsinya adalah <span data-katex="f(x) = 2x + 3"></span>?</p>
+                <div class="bg-amber-50 p-6 rounded-2xl border-2 border-amber-100">
+                    <p class="text-sm mb-3">Kamu TIDAK perlu bersusah payah mencari rumus inversnya terlebih dahulu! Cukup samakan saja rumus fungsi awal dengan angka hasil tersebut:</p>
+                    <p class="text-lg font-bold text-indigo-700" data-katex="2x + 3 = 13 \implies 2x = 10 \implies x = 5"></p>
+                    <p class="text-sm mt-3">Maka didapatkan jawaban instan: <span class="font-bold text-emerald-600" data-katex="f^{-1}(13) = 5"></span>!</p>
+                </div>
+            </div>
+
+            <!-- STEP 34: Final Exam Simulator -->
+            <div class="slide-step w-full quest-card bg-white p-6 md:p-10 rounded-3xl hidden" data-step="34">
+                <span class="bg-purple-100 text-purple-700 px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider">Level 34: Ujian Final</span>
+                <h2 class="text-3xl font-bold text-slate-800 mt-2 mb-4">Ujian Masuk SMA: Tantangan Final</h2>
+                <p class="text-slate-600 mb-4">Inilah tantangan penentu kelayakan prestasimu. Selesaikan soal adaptasi Cambridge ini:</p>
+                <div class="bg-purple-50 p-6 rounded-2xl border-2 border-purple-100 mb-6">
+                    <p class="text-slate-800 font-bold mb-2">Diketahui fungsi:</p>
+                    <p class="text-center text-xl font-bold" data-katex="f(x) = \frac{4x + 1}{5}"></p>
+                    <p class="text-slate-800 font-bold mt-2">Berapakah nilai angka nyata untuk variabel <span data-katex="f^{-1}(9)"></span>?</p>
+                </div>
+                <div class="flex flex-col gap-3">
+                    <button onclick="checkAnswer(this, false, 'feedback34')" class="quiz-option text-left p-4 rounded-xl border-2 border-slate-200 hover:border-purple-500 hover:bg-purple-50 font-semibold">A. 5</button>
+                    <button onclick="checkAnswer(this, true, 'feedback34')" class="quiz-option text-left p-4 rounded-xl border-2 border-slate-200 hover:border-purple-500 hover:bg-purple-50 font-semibold">B. 11</button>
+                    <button onclick="checkAnswer(this, false, 'feedback34')" class="quiz-option text-left p-4 rounded-xl border-2 border-slate-200 hover:border-purple-500 hover:bg-purple-50 font-semibold">C. 9</button>
+                </div>
+                <div id="feedback34" class="feedback-box mt-4 p-4 rounded-2xl font-bold hidden"></div>
+            </div>
+
+            <!-- STEP 35: Graduation and Victory -->
+            <div class="slide-step w-full quest-card bg-white p-6 md:p-10 rounded-3xl hidden text-center" data-step="35">
+                <div class="max-w-md mx-auto">
+                    <span class="bg-emerald-100 text-emerald-700 px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider animate-ping">LEVEL MAX COMPLETED</span>
+                    <h2 class="text-4xl font-bold text-slate-800 mt-6 mb-4">🏆 Misi Selesai: Kamu Adalah Ahli Fungsi!</h2>
+                    <p class="text-lg text-slate-600 mb-6 leading-relaxed">
+                        Selamat calon pemimpin masa depan! Kamu berhasil menyelesaikan 35 tahapan petualangan belajar fungsi kurikulum Cambridge dengan sangat cerdas.
+                    </p>
+                    <div class="bg-gradient-to-tr from-amber-400 to-orange-500 text-white p-6 rounded-3xl shadow-lg mb-6">
+                        <h4 class="text-xl font-bold mb-1">GRADE A* ACQUIRED</h4>
+                        <p class="text-xs opacity-90 uppercase tracking-widest font-black">Sertifikat Kompetensi Aljabar Dasar</p>
+                    </div>
+                    <p class="text-sm text-slate-400">Kamu sekarang sangat siap menghadapi segala jenis tes masuk SMA Favorit berstandar internasional!</p>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Navigation Buttons -->
+        <div class="flex justify-between items-center mt-4">
+            <button id="btnPrev" onclick="moveSlide(-1)" class="btn bg-white hover:bg-slate-50 text-slate-700 px-6 py-3 rounded-2xl border-4 border-slate-100 font-bold shadow-sm transition flex items-center gap-2">
+                <span>◀️ Sebelumnya</span>
+            </button>
+            <button id="btnNext" onclick="moveSlide(1)" class="btn bg-gradient-to-r from-sky-400 to-indigo-500 text-white px-8 py-4 rounded-2xl font-black shadow-lg hover:shadow-sky-300 transition flex items-center gap-2 transform active:scale-95">
+                <span>Selanjutnya ▶️</span>
+            </button>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-slate-50 border-t-2 border-slate-100 py-4 text-center text-xs text-slate-400 font-bold">
+        <span>© 2026 Cambridge Math Quest Studio • Akselerasi Akademik Mandiri</span>
+    </footer>
+
+    <!-- Interactive Page Engine Scripts -->
+    <script>
+        let currentStep = 1;
+        const totalSteps = 35;
+
+        // Initialize Map Circles
+        const mapContainer = document.getElementById('adventureMap');
+        for (let i = 1; i <= totalSteps; i++) {
+            const button = document.createElement('button');
+            button.className = `step-node w-8 h-8 rounded-full font-black text-xs border-2 shadow-sm flex items-center justify-center transition-all ${
+                i === 1 ? 'bg-sky-500 text-white border-sky-400 scale-110' : 'bg-slate-100 text-slate-400 border-slate-200'
+            }`;
+            button.id = `map-node-${i}`;
+            button.innerText = i;
+            button.setAttribute('onclick', `jumpToStep(${i})`);
+            mapContainer.appendChild(button);
+        }
+
+        function jumpToStep(targetStep) {
+            // Hide previous step
+            const currentActiveCard = document.querySelector(`.slide-step[data-step="${currentStep}"]`);
+            if (currentActiveCard) {
+                currentActiveCard.classList.add('hidden');
+            }
+
+            // Update state
+            currentStep = targetStep;
+
+            // Show new step
+            const targetCard = document.querySelector(`.slide-step[data-step="${currentStep}"]`);
+            if (targetCard) {
+                targetCard.classList.remove('hidden');
+            } else {
+                // If there's no custom slide card, default to generating a dynamically calculated advanced math practice page!
+                generateDynamicPracticeSlide(currentStep);
+            }
+
+            updateNavigationUI();
+            
+            // Re-render KaTeX to ensure perfect math display
+            if (window.renderMathInElement) {
+                renderMathInElement(document.getElementById('questViewport'), {
+                    delimiters: [
+                        {left: '$$', right: '$$', display: true},
+                        {left: '$', right: '$', display: false}
+                    ],
+                    throwOnError: false
+                });
+            }
+        }
+
+        function generateDynamicPracticeSlide(stepNum) {
+            // Remove any existing dynamic element
+            const existingDynamic = document.getElementById('dynamicQuestCard');
+            if (existingDynamic) existingDynamic.remove();
+
+            const container = document.getElementById('questViewport');
+            const dynamicCard = document.createElement('div');
+            dynamicCard.id = 'dynamicQuestCard';
+            dynamicCard.className = 'slide-step w-full quest-card bg-white p-6 md:p-10 rounded-3xl';
+            
+            // Generate custom contents based on the requested step number to span 35 pages logically
+            let stepTitle = `Level ${stepNum}: Pemahaman Aljabar`;
+            let stepContentHtml = '';
+
+            if (stepNum === 2) {
+                // Handled statically
+            } else if (stepNum >= 3 && stepNum <= 35 && !document.querySelector(`.slide-step[data-step="${stepNum}"]`)) {
+                // Fallback logical generator for intermediate practice steps
+                const varSeed = stepNum * 3;
+                const operandA = (stepNum % 5) + 2;
+                const operandB = (stepNum % 3) + 1;
+
+                stepTitle = `Level ${stepNum}: Latihan Evaluasi Terintegrasi`;
+                stepContentHtml = `
+                    <span class="bg-sky-100 text-sky-700 px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider">Materi Tambahan</span>
+                    <h2 class="text-3xl font-bold text-slate-800 mt-2 mb-4">Pengembangan Keterampilan Soal Seri ${stepNum}</h2>
+                    <p class="text-slate-600 mb-4">Sebagai bagian akselerasi cerdas, selesaikan persoalan evaluasi fungsional di bawah ini:</p>
+                    <div class="bg-indigo-50 p-6 rounded-2xl mb-6">
+                        <p class="font-bold text-slate-700 mb-2">Fungsi yang ditentukan:</p>
+                        <p class="text-xl font-bold text-indigo-700 text-center" data-katex="f(x) = ${operandA}x - ${operandB}"></p>
+                        <p class="font-bold text-slate-700 mt-4 mb-2">Tentukan output nilai f(x) saat input bernilai <span data-katex="x = 4"></span>:</p>
+                    </div>
+                    <div class="flex flex-col gap-3">
+                        <button onclick="checkAnswer(this, true, 'dynamicFeedback')" class="quiz-option text-left p-4 rounded-xl border-2 border-slate-200 hover:border-sky-500 hover:bg-sky-50 font-semibold">A. ${operandA * 4 - operandB}</button>
+                        <button onclick="checkAnswer(this, false, 'dynamicFeedback')" class="quiz-option text-left p-4 rounded-xl border-2 border-slate-200 hover:border-sky-500 hover:bg-sky-50 font-semibold">B. ${operandA * 3 + operandB}</button>
+                        <button onclick="checkAnswer(this, false, 'dynamicFeedback')" class="quiz-option text-left p-4 rounded-xl border-2 border-slate-200 hover:border-sky-500 hover:bg-sky-50 font-semibold">C. ${operandA * 5}</button>
+                    </div>
+                    <div id="dynamicFeedback" class="feedback-box mt-4 p-4 rounded-2xl font-bold hidden"></div>
+                `;
+            }
+
+            dynamicCard.innerHTML = stepContentHtml;
+            container.appendChild(dynamicCard);
+        }
+
+        function updateNavigationUI() {
+            // Update node colors in map
+            for (let i = 1; i <= totalSteps; i++) {
+                const node = document.getElementById(`map-node-${i}`);
+                if (node) {
+                    node.className = `step-node w-8 h-8 rounded-full font-black text-xs border-2 shadow-sm flex items-center justify-center transition-all ${
+                        i === currentStep 
+                        ? 'bg-gradient-to-tr from-sky-400 to-indigo-500 text-white border-sky-300 scale-125' 
+                        : (i < currentStep ? 'bg-emerald-100 text-emerald-600 border-emerald-200' : 'bg-slate-50 text-slate-400 border-slate-200')
+                    }`;
+                }
+            }
+
+            // Update Progress Bar
+            const progressPercent = ((currentStep) / totalSteps) * 100;
+            document.getElementById('questProgressBar').style.width = `${progressPercent}%`;
+            document.getElementById('questStepCounter').innerText = `${currentStep} / ${totalSteps}`;
+
+            // Control Navigation Buttons disabled state safely
+            document.getElementById('btnPrev').style.visibility = currentStep === 1 ? 'hidden' : 'visible';
+            
+            const nextButton = document.getElementById('btnNext');
+            if (currentStep === totalSteps) {
+                nextButton.innerHTML = "<span>🎉 Main Lagi!</span>";
+            } else {
+                nextButton.innerHTML = "<span>Selanjutnya ▶️</span>";
+            }
+        }
+
+        function moveSlide(direction) {
+            let target = currentStep + direction;
+            if (target === 36 && currentStep === 35) {
+                target = 1; // loop back to start
+            }
+            if (target >= 1 && target <= totalSteps) {
+                jumpToStep(target);
+            }
+        }
+
+        function runSandboxSimulation() {
+            const xVal = parseFloat(document.getElementById('sandboxXRange').value);
+            document.getElementById('sandboxValX').innerText = xVal;
+            const yResult = (3 * xVal) - 4;
+            document.getElementById('sandboxValY').innerText = yResult;
+        }
+
+        function checkAnswer(element, isCorrect, feedbackId) {
+            const feedbackBox = document.getElementById(feedbackId);
+            feedbackBox.style.display = "block";
+            feedbackBox.classList.remove('hidden');
+            
+            // Clear all sister options state in this specific slide card
+            const parent = element.parentNode;
+            const options = parent.querySelectorAll('.quiz-option');
+            options.forEach(opt => {
+                opt.className = "quiz-option text-left p-4 rounded-xl border-2 border-slate-200 hover:border-slate-300 font-semibold";
+            });
+
+            if (isCorrect) {
+                element.className = "quiz-option text-left p-4 rounded-xl border-4 border-emerald-500 bg-emerald-50 text-emerald-800 font-bold shadow-md";
+                feedbackBox.style.backgroundColor = "#d1fae5";
+                feedbackBox.style.color = "#065f46";
+                feedbackBox.innerHTML = "✨ DAHSYAT! Jawabanmu 100% Benar! Kamu memiliki logika berpikir cepat yang sangat tajam!";
+            } else {
+                element.className = "quiz-option text-left p-4 rounded-xl border-4 border-rose-500 bg-rose-50 text-rose-800 font-bold shadow-md";
+                feedbackBox.style.backgroundColor = "#fee2e2";
+                feedbackBox.style.color = "#991b1b";
+                feedbackBox.innerHTML = "💡 Hampir Tepat! Coba periksa kembali perhitunganmu atau ulas lembar rumus bantuan di halaman sebelumnya.";
+            }
+        }
+
+        // Run Initial Render on load
+        window.onload = function() {
+            // Render Math equations globally
+            if (window.renderMathInElement) {
+                renderMathInElement(document.body, {
+                    delimiters: [
+                        {left: '$$', right: '$$', display: true},
+                        {left: '$', right: '$', display: false}
+                    ],
+                    throwOnError: false
+                });
+                
+                // Extra search for custom target attributes
+                document.querySelectorAll('[data-katex]').forEach(el => {
+                    const mathString = el.getAttribute('data-katex');
+                    katex.render(mathString, el, { throwOnError: false });
+                });
+            }
+            updateNavigationUI();
+        }
+    </script>
+</body>
+</html>
