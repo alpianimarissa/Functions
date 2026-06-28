@@ -1,0 +1,1049 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Math Quest: Cambridge Functions Mastery</title>
+    <!-- Tailwind CSS for modern responsive styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- KaTeX for beautiful math equations -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+        
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: linear-gradient(135deg, #eef2ff 0%, #f0fdfa 50%, #fdf2f8 100%);
+        }
+
+        /* Smooth bouncy transitions for gamified UI */
+        .option-button {
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 2px solid #e2e8f0;
+        }
+
+        .option-button:hover:not(:disabled) {
+            border-color: #6366f1;
+            background-color: #f5f3ff;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.1);
+        }
+
+        .option-button.selected {
+            border-color: #6366f1;
+            background-color: #e0e7ff;
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.2);
+        }
+
+        .option-button.correct {
+            border-color: #10b981 !important;
+            background-color: #d1fae5 !important;
+            color: #065f46 !important;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.15);
+        }
+
+        .option-button.wrong {
+            border-color: #f43f5e !important;
+            background-color: #ffe4e6 !important;
+            color: #9f1239 !important;
+            box-shadow: 0 4px 12px rgba(244, 63, 94, 0.15);
+        }
+
+        /* Colorful custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #a5b4fc;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between text-slate-800">
+
+    <!-- Header Bar with vibrant colors -->
+    <header class="bg-white/80 backdrop-blur-md border-b-4 border-indigo-100 px-6 py-4 sticky top-0 z-40 shadow-sm">
+        <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+            <!-- Brand Info Left -->
+            <div class="flex items-center gap-3">
+                <div class="bg-gradient-to-tr from-indigo-500 via-purple-500 to-pink-500 text-white p-2.5 rounded-2xl shadow-lg">
+                    <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path>
+                    </svg>
+                </div>
+                <div>
+                    <h1 class="text-xl font-black text-slate-800 tracking-tight flex items-center gap-2">
+                        Math Quest
+                        <span class="text-[10px] bg-gradient-to-r from-indigo-500 to-purple-500 text-white px-2.5 py-1 rounded-full font-extrabold uppercase tracking-widest">Functions Mastery</span>
+                    </h1>
+                    <p class="text-xs font-bold text-indigo-400 uppercase tracking-wider">Cambridge Secondary & O-Level Challenge</p>
+                </div>
+            </div>
+
+            <!-- Stats & Tools Right -->
+            <div class="flex items-center gap-3">
+                <div class="bg-amber-100 text-amber-700 px-4 py-2 rounded-xl border-2 border-amber-200 font-extrabold text-sm flex items-center gap-1.5 shadow-sm">
+                    <span>✨</span> <span id="xpDisplay">0</span> XP
+                </div>
+                <!-- Scratchpad Trigger -->
+                <button onclick="toggleScratchpad()" class="bg-indigo-50 hover:bg-indigo-100 text-indigo-600 px-4 py-2 rounded-xl border-2 border-indigo-200 font-extrabold text-sm flex items-center gap-2 transition active:scale-95 shadow-sm">
+                    <span>✏️</span> Papan Cakar
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Two-Column Layout -->
+    <main class="max-w-7xl w-full mx-auto p-4 md:p-6 flex-grow grid grid-cols-1 lg:grid-cols-12 gap-6">
+        
+        <!-- COLUMN 1: LEFT SIDEBAR (Mission Stats, Categories, Question Map) -->
+        <section class="lg:col-span-4 flex flex-col gap-6">
+            
+            <!-- Statistics Panel (Highly Colorful) -->
+            <div class="bg-white p-5 rounded-3xl border-2 border-indigo-50 shadow-md">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="font-bold text-slate-500 text-xs uppercase tracking-wider">Statistik Misi</h3>
+                    <span id="answeredCounter" class="text-indigo-600 font-black text-xs bg-indigo-50 px-3 py-1 rounded-full border border-indigo-100">0/30 Terjawab</span>
+                </div>
+                
+                <div class="grid grid-cols-3 gap-3 text-center">
+                    <div class="bg-emerald-50 border-2 border-emerald-100 p-3 rounded-2xl">
+                        <p class="text-[10px] font-extrabold text-emerald-600 uppercase">Benar</p>
+                        <p id="correctStat" class="text-2xl font-black text-emerald-700">0</p>
+                    </div>
+                    <div class="bg-rose-50 border-2 border-rose-100 p-3 rounded-2xl">
+                        <p class="text-[10px] font-extrabold text-rose-600 uppercase">Salah</p>
+                        <p id="wrongStat" class="text-2xl font-black text-rose-700">0</p>
+                    </div>
+                    <div class="bg-indigo-50 border-2 border-indigo-100 p-3 rounded-2xl">
+                        <p class="text-[10px] font-extrabold text-indigo-600 uppercase">Akurasi</p>
+                        <p id="accuracyStat" class="text-2xl font-black text-indigo-700">0%</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Categories Selection with Fresh Colors -->
+            <div class="bg-white p-5 rounded-3xl border-2 border-indigo-50 shadow-md flex flex-col gap-2">
+                <h3 class="font-bold text-slate-500 text-xs uppercase tracking-wider mb-2">Peta Kategori</h3>
+                <button onclick="filterCategory('all')" id="cat-all" class="w-full text-left p-3.5 rounded-2xl border-2 border-slate-100 hover:border-indigo-400 font-bold text-xs transition flex justify-between items-center">
+                    <span class="flex items-center gap-2">🌐 <span>Semua Tantangan</span></span>
+                    <span class="text-[10px] bg-slate-100 text-slate-600 px-2.5 py-1 rounded-full font-extrabold" id="count-all">30</span>
+                </button>
+                <button onclick="filterCategory(1)" id="cat-1" class="w-full text-left p-3.5 rounded-2xl border-2 border-slate-100 hover:border-sky-400 font-bold text-xs transition flex justify-between items-center">
+                    <span class="flex items-center gap-2">🟢 <span class="text-slate-700">1. Notasi & Input-Output</span></span>
+                    <span class="text-[10px] bg-sky-100 text-sky-700 px-2.5 py-1 rounded-full font-extrabold" id="count-1">8</span>
+                </button>
+                <button onclick="filterCategory(2)" id="cat-2" class="w-full text-left p-3.5 rounded-2xl border-2 border-slate-100 hover:border-fuchsia-400 font-bold text-xs transition flex justify-between items-center">
+                    <span class="flex items-center gap-2">🔵 <span class="text-slate-700">2. Fungsi Komposisi</span></span>
+                    <span class="text-[10px] bg-fuchsia-100 text-fuchsia-700 px-2.5 py-1 rounded-full font-extrabold" id="count-2">7</span>
+                </button>
+                <button onclick="filterCategory(3)" id="cat-3" class="w-full text-left p-3.5 rounded-2xl border-2 border-slate-100 hover:border-orange-400 font-bold text-xs transition flex justify-between items-center">
+                    <span class="flex items-center gap-2">🟡 <span class="text-slate-700">3. Fungsi Invers</span></span>
+                    <span class="text-[10px] bg-orange-100 text-orange-700 px-2.5 py-1 rounded-full font-extrabold" id="count-3">8</span>
+                </button>
+                <button onclick="filterCategory(4)" id="cat-4" class="w-full text-left p-3.5 rounded-2xl border-2 border-slate-100 hover:border-indigo-400 font-bold text-xs transition flex justify-between items-center">
+                    <span class="flex items-center gap-2">🔴 <span class="text-slate-700">4. Analisis & HOTS</span></span>
+                    <span class="text-[10px] bg-indigo-100 text-indigo-700 px-2.5 py-1 rounded-full font-extrabold" id="count-4">7</span>
+                </button>
+            </div>
+
+            <!-- Question Navigation Grid Map -->
+            <div class="bg-white p-5 rounded-3xl border-2 border-indigo-50 shadow-md">
+                <div class="flex justify-between items-center mb-3">
+                    <h3 class="font-bold text-slate-500 text-xs uppercase tracking-wider">Navigasi Level</h3>
+                    <span class="text-[10px] text-indigo-400 font-bold">Pilih No. Soal</span>
+                </div>
+                
+                <div class="max-h-56 overflow-y-auto pr-1">
+                    <div id="petaSoalGrid" class="grid grid-cols-5 gap-2 text-center">
+                        <!-- Dynamic nodes loaded here -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- COLUMN 2: RIGHT MAIN CONTENT (Question Viewer with Color Accents) -->
+        <section class="lg:col-span-8 flex flex-col justify-between h-full">
+            <div class="bg-white p-6 md:p-8 rounded-3xl border-4 border-indigo-100 shadow-xl flex-grow flex flex-col justify-between min-h-[480px]">
+                
+                <!-- Question Top Header Details -->
+                <div>
+                    <div class="flex justify-between items-center border-b-2 border-slate-100 pb-4 mb-6">
+                        <span id="currentCategoryBadge" class="bg-indigo-100 text-indigo-800 text-xs px-3.5 py-1.5 rounded-xl font-extrabold uppercase tracking-wider">
+                            Kategori
+                        </span>
+                        <span class="text-xs bg-amber-100 text-amber-800 px-3 py-1.5 rounded-xl font-extrabold border border-amber-200">
+                            +10 XP
+                        </span>
+                    </div>
+
+                    <!-- Question Number & Prompt -->
+                    <h2 id="soalNumberTitle" class="text-xl font-black text-indigo-900 mb-4">Soal No.</h2>
+                    
+                    <!-- Question Text rendering box -->
+                    <div class="text-slate-700 text-base md:text-lg leading-relaxed mb-8 bg-slate-50 p-5 rounded-2xl border-2 border-dashed border-indigo-100" id="questionPromptContainer">
+                        Memuat pertanyaan...
+                    </div>
+                </div>
+
+                <!-- Multiple Choice Answer Options Structure -->
+                <div class="space-y-4 mb-8">
+                    <!-- Option A -->
+                    <button onclick="selectOption('A')" id="optionA" class="option-button w-full text-left p-4 rounded-2xl font-bold text-sm md:text-base flex items-center gap-4 bg-white text-slate-700 shadow-sm">
+                        <span class="w-9 h-9 rounded-xl bg-slate-100 text-slate-600 flex items-center justify-center font-extrabold shrink-0 border border-slate-200">A</span>
+                        <span class="option-text flex-grow">A. Memuat opsi...</span>
+                    </button>
+                    <!-- Option B -->
+                    <button onclick="selectOption('B')" id="optionB" class="option-button w-full text-left p-4 rounded-2xl font-bold text-sm md:text-base flex items-center gap-4 bg-white text-slate-700 shadow-sm">
+                        <span class="w-9 h-9 rounded-xl bg-slate-100 text-slate-600 flex items-center justify-center font-extrabold shrink-0 border border-slate-200">B</span>
+                        <span class="option-text flex-grow">B. Memuat opsi...</span>
+                    </button>
+                    <!-- Option C -->
+                    <button onclick="selectOption('C')" id="optionC" class="option-button w-full text-left p-4 rounded-2xl font-bold text-sm md:text-base flex items-center gap-4 bg-white text-slate-700 shadow-sm">
+                        <span class="w-9 h-9 rounded-xl bg-slate-100 text-slate-600 flex items-center justify-center font-extrabold shrink-0 border border-slate-200">C</span>
+                        <span class="option-text flex-grow">C. Memuat opsi...</span>
+                    </button>
+                    <!-- Option D -->
+                    <button onclick="selectOption('D')" id="optionD" class="option-button w-full text-left p-4 rounded-2xl font-bold text-sm md:text-base flex items-center gap-4 bg-white text-slate-700 shadow-sm">
+                        <span class="w-9 h-9 rounded-xl bg-slate-100 text-slate-600 flex items-center justify-center font-extrabold shrink-0 border border-slate-200">D</span>
+                        <span class="option-text flex-grow">D. Memuat opsi...</span>
+                    </button>
+                </div>
+
+                <!-- Dynamic Solution Explanations Box -->
+                <div id="explanationBox" class="hidden bg-emerald-50 border-2 border-emerald-100 p-6 rounded-2xl mb-6">
+                    <h4 class="text-emerald-800 font-black text-sm mb-2 flex items-center gap-2">
+                        <span>💡</span> Pembahasan Taktis:
+                    </h4>
+                    <p id="explanationText" class="text-xs md:text-sm text-emerald-900 leading-relaxed">
+                        <!-- Dynamic solution render -->
+                    </p>
+                </div>
+
+                <!-- Footer Nav Controls -->
+                <div class="flex justify-between items-center border-t border-slate-100 pt-4">
+                    <button id="btnPrev" onclick="navigateQuestion(-1)" class="bg-slate-100 hover:bg-slate-200 text-slate-600 px-5 py-2.5 rounded-xl font-bold text-xs md:text-sm transition flex items-center gap-2">
+                        ◀ Sebelumnya
+                    </button>
+                    <span id="centerProgressText" class="text-xs md:text-sm text-slate-400 font-extrabold">1 / 30 Soal</span>
+                    <button id="btnNext" onclick="navigateQuestion(1)" class="bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2.5 rounded-xl font-black text-xs md:text-sm transition flex items-center gap-2 shadow-md">
+                        Selanjutnya ▶
+                    </button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Scratchpad Canvas Draw Mode -->
+    <div id="scratchpadModal" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl border-4 border-indigo-200 max-w-3xl w-full p-6 shadow-2xl relative">
+            <button onclick="toggleScratchpad()" class="absolute top-4 right-4 bg-slate-100 hover:bg-slate-200 p-2 rounded-full text-slate-600 transition">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+            
+            <h3 class="text-lg font-black text-indigo-700 flex items-center gap-2 mb-2">
+                ✏️ Papan Cakar (Scratchpad Mandiri)
+            </h3>
+            <p class="text-xs text-slate-400 mb-4">Gunakan mouse atau layar sentuh untuk corat-coret coretan matematis.</p>
+            
+            <!-- Canvas Drawing Workspace -->
+            <div class="border-2 border-slate-200 rounded-2xl overflow-hidden bg-slate-50 relative">
+                <canvas id="scratchpadCanvas" class="w-full h-80 block cursor-crosshair"></canvas>
+            </div>
+
+            <!-- Drawing Toolbox -->
+            <div class="flex flex-wrap items-center justify-between gap-4 mt-4">
+                <div class="flex items-center gap-2">
+                    <button onclick="setBrushColor('#3b82f6')" class="w-7 h-7 rounded-full bg-blue-500 border-2 border-white ring-2 ring-blue-200 active:scale-95 transition"></button>
+                    <button onclick="setBrushColor('#10b981')" class="w-7 h-7 rounded-full bg-emerald-500 border-2 border-white active:scale-95 transition"></button>
+                    <button onclick="setBrushColor('#ef4444')" class="w-7 h-7 rounded-full bg-red-500 border-2 border-white active:scale-95 transition"></button>
+                    <button onclick="setBrushColor('#000000')" class="w-7 h-7 rounded-full bg-black border-2 border-white active:scale-95 transition"></button>
+                    <span class="w-[1px] h-6 bg-slate-200 mx-1"></span>
+                    <button onclick="setBrushSize(3)" class="text-[10px] font-bold px-2.5 py-1 bg-slate-100 rounded-lg border hover:bg-slate-200">Tipis</button>
+                    <button onclick="setBrushSize(7)" class="text-[10px] font-bold px-2.5 py-1 bg-slate-100 rounded-lg border hover:bg-slate-200">Sedang</button>
+                </div>
+                <div class="flex gap-2">
+                    <button onclick="clearCanvas()" class="text-xs font-bold bg-slate-100 hover:bg-slate-200 text-slate-600 px-4 py-2 rounded-xl transition">
+                        Hapus Semua
+                    </button>
+                    <button onclick="toggleScratchpad()" class="text-xs font-bold bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2 rounded-xl transition">
+                        Selesai Mencakar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Page Footer -->
+    <footer class="bg-white/80 border-t-2 border-indigo-50 py-4 text-center text-xs text-slate-400 font-semibold mt-6">
+        <span>Math Quest Mastery • Cambridge Syllabus O-Level (0580) / AddMath (0606)</span>
+    </footer>
+
+    <!-- Database script with NO syntactical issues (fixed Question 13) -->
+    <script>
+        const questionDatabase = [
+            // CATEGORY 1: FONDASI DASAR & NOTASI (1-8)
+            {
+                id: 1,
+                category: 1,
+                title: "Soal No. 1: Notasi Substitusi Linier",
+                prompt: "Diketahui fungsi linear $f(x) = 3x - 5$. Tentukan nilai output untuk $f(4)$.",
+                options: {
+                    A: "$f(4) = 7$",
+                    B: "$f(4) = 17$",
+                    C: "$f(4) = -7$",
+                    D: "$f(4) = 12$"
+                },
+                correct: "A",
+                explanation: "Substitusikan $x = 4$ ke dalam persamaan: <br>$f(4) = 3(4) - 5 = 12 - 5 = 7$."
+            },
+            {
+                id: 2,
+                category: 1,
+                title: "Soal No. 2: Substitusi Input Negatif",
+                prompt: "Diberikan sebuah rumus fungsi $g(x) = 12 - 5x$. Berapakah nilai dari $g(-2)$?",
+                options: {
+                    A: "$g(-2) = 2$",
+                    B: "$g(-2) = -22$",
+                    C: "$g(-2) = 22$",
+                    D: "$g(-2) = -2$"
+                },
+                correct: "C",
+                explanation: "Hati-hati dalam perkalian tanda negatif:<br>$g(-2) = 12 - 5(-2) = 12 + 10 = 22$."
+            },
+            {
+                id: 3,
+                category: 1,
+                title: "Soal No. 3: Substitusi Kuadratis",
+                prompt: "Tentukan output dari fungsi kuadrat $h(x) = x^2 - 3x + 1$ saat nilai input bernilai $x = 3$.",
+                options: {
+                    A: "$h(3) = 10$",
+                    B: "$h(3) = 1$",
+                    C: "$h(3) = -1$",
+                    D: "$h(3) = 19$"
+                },
+                correct: "B",
+                explanation: "Substitusikan $x = 3$:<br>$h(3) = (3)^2 - 3(3) + 1 = 9 - 9 + 1 = 1$."
+            },
+            {
+                id: 4,
+                category: 1,
+                title: "Soal No. 4: Mencari Input dari Nilai Output",
+                prompt: "Jika diketahui fungsi $f(x) = 2x - 3$ dan $f(a) = 11$, tentukanlah nilai angka nyata untuk variabel $a$.",
+                options: {
+                    A: "$a = 4$",
+                    B: "$a = 5.5$",
+                    C: "$a = 8$",
+                    D: "$a = 7$"
+                },
+                correct: "D",
+                explanation: "Kita samakan rumus dengan outputnya:<br>$2a - 3 = 11 \\implies 2a = 14 \\implies a = 7$."
+            },
+            {
+                id: 5,
+                category: 1,
+                title: "Soal No. 5: Domain Terlarang Pecahan",
+                prompt: "Sebuah fungsi ditentukan oleh $g(t) = \\frac{8}{t-3}$. Tentukan batas domain real dari fungsi $g(t)$.",
+                options: {
+                    A: "$t \\neq 3$",
+                    B: "$t \\neq 0$",
+                    C: "$t > 3$",
+                    D: "$t \\neq -3$"
+                },
+                correct: "A",
+                explanation: "Penyebut dari suatu pecahan tidak boleh bernilai nol. Maka:<br>$t - 3 \\neq 0 \\implies t \\neq 3$."
+            },
+            {
+                id: 6,
+                category: 1,
+                title: "Soal No. 6: Input Variabel Aljabar",
+                prompt: "Diketahui fungsi linear $f(x) = 2x + 5$. Carilah rumus ekspresi untuk fungsi $f(3x)$.",
+                options: {
+                    A: "$f(3x) = 6x + 15$",
+                    B: "$f(3x) = 6x + 5$",
+                    C: "$f(3x) = 2x + 15$",
+                    D: "$f(3x) = 5x + 5$"
+                },
+                correct: "B",
+                explanation: "Ganti variabel $x$ pada rumus awal menjadi kesatuan $(3x)$:<br>$f(3x) = 2(3x) + 5 = 6x + 5$."
+            },
+            {
+                id: 7,
+                category: 1,
+                title: "Soal No. 7: Pergeseran Domain Aljabar",
+                prompt: "Jika diketahui fungsi $h(x) = 4 - x$, tentukan bentuk aljabar tersederhana dari $h(x-2)$.",
+                options: {
+                    A: "$h(x-2) = 2 - x$",
+                    B: "$h(x-2) = 6 - x$",
+                    C: "$h(x-2) = 6 + x$",
+                    D: "$h(x-2) = -x - 2$"
+                },
+                correct: "B",
+                explanation: "Substitusikan $(x-2)$ menggantikan $x$:<br>$h(x-2) = 4 - (x-2) = 4 - x + 2 = 6 - x$."
+            },
+            {
+                id: 8,
+                category: 1,
+                title: "Soal No. 8: Batas Daerah Hasil (Range)",
+                prompt: "Sebuah fungsi kuadrat didefinisikan sebagai $f(x) = x^2$. Tentukan batas-batas dari daerah hasil (Range) fungsi jika domainnya mencakup semua bilangan real.",
+                options: {
+                    A: "$f(x) \\in \\mathbb{R}$",
+                    B: "$f(x) \\neq 0$",
+                    C: "$f(x) \\geq 0$",
+                    D: "$f(x) > 0$"
+                },
+                correct: "C",
+                explanation: "Karena kuadrat dari bilangan real apa pun (baik positif, negatif, atau nol) tidak pernah negatif, maka Range-nya adalah $f(x) \\geq 0$."
+            },
+            
+            // CATEGORY 2: FUNGSI KOMPOSISI (9-15)
+            {
+                id: 9,
+                category: 2,
+                title: "Soal No. 9: Urutan Kerja Komposisi Nilai",
+                prompt: "Dua buah fungsi adalah $f(x) = x + 3$ dan $g(x) = 2x$. Hitunglah nilai dari fungsi komposisi $fg(5)$.",
+                options: {
+                    A: "$fg(5) = 13$",
+                    B: "$fg(5) = 16$",
+                    C: "$fg(5) = 26$",
+                    D: "$fg(5) = 10$"
+                },
+                correct: "A",
+                explanation: "Mulai dari bagian kanan ke kiri:<br>1. Cari $g(5) = 2(5) = 10$.<br>2. Masukkan hasil tersebut ke $f$: $f(10) = 10 + 3 = 13$."
+            },
+            {
+                id: 10,
+                category: 2,
+                title: "Soal No. 10: Komposisi Aljabar fg(x)",
+                prompt: "Diberikan $f(x) = 3x - 1$ dan $g(x) = x^2$. Tentukan bentuk ekspresi tunggal untuk $fg(x)$.",
+                options: {
+                    A: "$fg(x) = (3x-1)^2$",
+                    B: "$fg(x) = 9x^2 - 1$",
+                    C: "$fg(x) = 3x^2 - 1$",
+                    D: "$fg(x) = 3x^2 - 3$"
+                },
+                correct: "C",
+                explanation: "Artinya kita memasukkan fungsi $g(x)$ ke dalam $f(x)$:<br>$fg(x) = f(g(x)) = f(x^2) = 3(x^2) - 1 = 3x^2 - 1$."
+            },
+            {
+                id: 11,
+                category: 2,
+                title: "Soal No. 11: Perbedaan Urutan Komposisi gf(x)",
+                prompt: "Menggunakan fungsi yang sama dari soal sebelumnya, yaitu $f(x) = 3x - 1$ dan $g(x) = x^2$, tentukan bentuk ekspresi dari $gf(x)$.",
+                options: {
+                    A: "$gf(x) = 9x^2 - 1$",
+                    B: "$gf(x) = 9x^2 - 6x + 1$",
+                    C: "$gf(x) = 3x^2 - 1$",
+                    D: "$gf(x) = 9x^2 + 1$"
+                },
+                correct: "B",
+                explanation: "Kita masukkan $f(x)$ ke dalam $g(x)$:<br>$gf(x) = g(f(x)) = g(3x - 1) = (3x - 1)^2$.<br>Uraikan: $(3x - 1)(3x - 1) = 9x^2 - 6x + 1$."
+            },
+            {
+                id: 12,
+                category: 2,
+                title: "Soal No. 12: Komposisi Berantai gh(1)",
+                prompt: "Diketahui fungsi $h(x) = 2x + 1$ dan $g(x) = 3x - 2$. Selesaikan nilai dari $gh(1)$.",
+                options: {
+                    A: "$gh(1) = 1$",
+                    B: "$gh(1) = 5$",
+                    C: "$gh(1) = 13$",
+                    D: "$gh(1) = 7$"
+                },
+                correct: "D",
+                explanation: "1. Evaluasi $h(1) = 2(1) + 1 = 3$.<br>2. Evaluasi $g(3) = 3(3) - 2 = 9 - 2 = 7$."
+            },
+            {
+                id: 13,
+                category: 2,
+                title: "Soal No. 13: Komposisi Pecahan-Linear",
+                prompt: "Diberikan $f(x) = \\frac{2}{x}$ dan $g(x) = x + 4$. Hitunglah nilai dari $fg(-2)$.",
+                options: {
+                    A: "$fg(-2) = 1$",
+                    B: "$fg(-2) = -1$",
+                    C: "$fg(-2) = 3$",
+                    D: "$fg(-2) = 0$"
+                },
+                correct: "A",
+                explanation: "1. Cari $g(-2) = -2 + 4 = 2$.<br>2. Masukkan hasil ke $f$: $f(2) = \\frac{2}{2} = 1$."
+            },
+            {
+                id: 14,
+                category: 2,
+                title: "Soal No. 14: Mencari Nilai Parameter Komposisi",
+                prompt: "Jika $f(x) = 2x + k$ dan $g(x) = 3x - 1$. Diketahui pula bahwa nilai $fg(2) = 13$. Tentukan nilai dari konstanta $k$.",
+                options: {
+                    A: "$k = 3$",
+                    B: "$k = -3$",
+                    C: "$k = 7$",
+                    D: "$k = 1$"
+                },
+                correct: "A",
+                explanation: "1. Tentukan $g(2) = 3(2) - 1 = 5$.<br>2. Substitusikan ke $f$: $f(5) = 2(5) + k = 10 + k$.<br>3. Samakan dengan 13: $10 + k = 13 \\implies k = 3$."
+            },
+            {
+                id: 15,
+                category: 2,
+                title: "Soal No. 15: Pemecahan Persamaan Komposisi Kuadrat",
+                prompt: "Ditentukan fungsi $f(x) = x^2 - 1$ dan $g(x) = x + 1$. Carilah semua nilai $x$ yang memenuhi persamaan komposisi $fg(x) = 0$.",
+                options: {
+                    A: "$x = 0$ atau $x = -2$",
+                    B: "$x = 1$ atau $x = -1$",
+                    C: "$x = 0$ saja",
+                    D: "$x = -2$ atau $x = 2$"
+                },
+                correct: "A",
+                explanation: "Rumuskan $fg(x) = (x+1)^2 - 1 = 0$.<br>$(x+1)^2 = 1 \\implies x+1 = \\pm 1$.<br>Kasus 1: $x+1 = 1 \\implies x = 0$.<br>Kasus 2: $x+1 = -1 \\implies x = -2$."
+            },
+            
+            // CATEGORY 3: FUNGSI INVERS (16-23)
+            {
+                id: 16,
+                category: 3,
+                title: "Soal No. 16: Konstruksi Invers Linear",
+                prompt: "Carilah rumus fungsi invers $f^{-1}(x)$ jika fungsi asalnya adalah $f(x) = 2x - 7$.",
+                options: {
+                    A: "$f^{-1}(x) = \\frac{x-7}{2}$",
+                    B: "$f^{-1}(x) = 7x - 2$",
+                    C: "$f^{-1}(x) = \\frac{x+7}{2}$",
+                    D: "$f^{-1}(x) = 2x + 7$"
+                },
+                correct: "C",
+                explanation: "1. Misal $y = 2x - 7$<br>2. Pindahkan konstanta: $y + 7 = 2x \\implies x = \\frac{y+7}{2}$<br>3. Maka $f^{-1}(x) = \\frac{x+7}{2}$."
+            },
+            {
+                id: 17,
+                category: 3,
+                title: "Soal No. 17: Invers Koefisien Negatif",
+                prompt: "Diberikan fungsi $g(x) = 5 - 3x$. Tentukan rumus fungsi invers dari $g^{-1}(x)$.",
+                options: {
+                    A: "$g^{-1}(x) = \\frac{5-x}{3}$",
+                    B: "$g^{-1}(x) = \\frac{x-5}{3}$",
+                    C: "$g^{-1}(x) = 3x - 5$",
+                    D: "$g^{-1}(x) = \\frac{5+x}{3}$"
+                },
+                correct: "A",
+                explanation: "1. Misal $y = 5 - 3x$<br>2. $3x = 5 - y \\implies x = \\frac{5-y}{3}$<br>3. Tukar variabel: $g^{-1}(x) = \\frac{5-x}{3}$."
+            },
+            {
+                id: 18,
+                category: 3,
+                title: "Soal No. 18: Invers Bentuk Pecahan Sederhana",
+                prompt: "Tentukan rumus invers $h^{-1}(x)$ apabila fungsi asal didefinisikan sebagai $h(x) = \\frac{x+2}{3}$.",
+                options: {
+                    A: "$h^{-1}(x) = 3x - 2$",
+                    B: "$h^{-1}(x) = 3x + 2$",
+                    C: "$h^{-1}(x) = \\frac{3}{x+2}$",
+                    D: "$h^{-1}(x) = 2x - 3$"
+                },
+                correct: "A",
+                explanation: "1. Misal $y = \\frac{x+2}{3}$<br>2. Kalikan silang: $3y = x + 2 \\implies x = 3y - 2$<br>3. Jadi $h^{-1}(x) = 3x - 2$."
+            },
+            {
+                id: 19,
+                category: 3,
+                title: "Soal No. 19: Nilai Invers Langsung",
+                prompt: "Diketahui fungsi linear $f(x) = 4x + 1$. Tentukan nilai dari $f^{-1}(9)$.",
+                options: {
+                    A: "$f^{-1}(9) = 37$",
+                    B: "$f^{-1}(9) = 2$",
+                    C: "$f^{-1}(9) = 1.5$",
+                    D: "$f^{-1}(9) = 4$"
+                },
+                correct: "B",
+                explanation: "Gunakan trik menyamakan nilai output: $4x + 1 = 9 \\implies 4x = 8 \\implies x = 2$. Jadi $f^{-1}(9) = 2$."
+            },
+            {
+                id: 20,
+                category: 3,
+                title: "Soal No. 20: Invers Bentuk Kubik",
+                prompt: "Diberikan fungsi kubik $g(x) = x^3 - 4$. Hitunglah nilai dari $g^{-1}(23)$.",
+                options: {
+                    A: "$g^{-1}(23) = 3$",
+                    B: "$g^{-1}(23) = 27$",
+                    C: "$g^{-1}(23) = 2$",
+                    D: "$g^{-1}(23) = 5$"
+                },
+                correct: "A",
+                explanation: "Kita samakan dengan rumus output: $x^3 - 4 = 23 \\implies x^3 = 27 \\implies x = \\sqrt[3]{27} = 3$."
+            },
+            {
+                id: 21,
+                category: 3,
+                title: "Soal No. 21: Nilai Invers Fungsi Pecahan",
+                prompt: "Ditentukan fungsi pecahan $f(x) = \\frac{2x+3}{x-1}$. Carilah nilai dari $f^{-1}(3)$.",
+                options: {
+                    A: "$f^{-1}(3) = 3$",
+                    B: "$f^{-1}(3) = 1.5$",
+                    C: "$f^{-1}(3) = 6$",
+                    D: "$f^{-1}(3) = -6$"
+                },
+                correct: "C",
+                explanation: "Setara dengan mencari $\\frac{2x+3}{x-1} = 3 \\implies 2x+3 = 3(x-1) \\implies 2x+3 = 3x-3 \\implies x = 6$. Jadi $f^{-1}(3) = 6$."
+            },
+            {
+                id: 22,
+                category: 3,
+                title: "Soal No. 22: Trik Cepat Invers Pecahan Rasional",
+                prompt: "Tentukan rumus invers $h^{-1}(x)$ dari fungsi $h(x) = \\frac{x+2}{x-3}$ menggunakan trik cepat tukar koefisien diagonal.",
+                options: {
+                    A: "$h^{-1}(x) = \\frac{3x+2}{x-1}$",
+                    B: "$h^{-1}(x) = \\frac{-3x+2}{x-1}$",
+                    C: "$h^{-1}(x) = \\frac{3x-2}{x+1}$",
+                    D: "$h^{-1}(x) = \\frac{-3x-2}{x+1}$"
+                },
+                correct: "A",
+                explanation: "Untuk $f(x) = \\frac{ax+b}{cx+d} \\implies f^{-1}(x) = \\frac{-dx+b}{cx-a}$.<br>Pada $h(x) = \\frac{1x+2}{1x-3}$, tukar koefisien $1$ dan $-3$ lalu kalikan negatif: <br>didapat $h^{-1}(x) = \\frac{3x+2}{x-1}$."
+            },
+            {
+                id: 23,
+                category: 3,
+                title: "Soal No. 23: Batas Domain Fungsi Invers",
+                prompt: "Diberikan fungsi $f(x) = \\frac{3x-4}{2x+5}$. Tentukan batas domain dari fungsi invers $f^{-1}(x)$.",
+                options: {
+                    A: "$x \\neq \\frac{3}{2}$",
+                    B: "$x \\neq -\\frac{5}{2}$",
+                    C: "$x \\neq \\frac{4}{3}$",
+                    D: "$x \\neq -\\frac{3}{2}$"
+                },
+                correct: "A",
+                explanation: "Invers dari $f(x)$ adalah $f^{-1}(x) = \\frac{-5x-4}{2x-3}$.<br>Domain invers tidak boleh membuat penyebut bernilai nol: $2x - 3 \\neq 0 \\implies x \\neq \\frac{3}{2}$."
+            },
+            
+            // CATEGORY 4: ADVANCED, GRAFIK & HOTS (24-30)
+            {
+                id: 24,
+                category: 4,
+                title: "Soal No. 24: Sifat Simetri Titik Koordinat Invers",
+                prompt: "Titik $(3, 7)$ terletak pada grafik fungsi $y = f(x)$. Koordinat titik manakah yang pasti terletak pada grafik fungsi inversnya, $y = f^{-1}(x)$?",
+                options: {
+                    A: "$(3, -7)$",
+                    B: "$(-3, -7)$",
+                    C: "$(7, 3)$",
+                    D: "$(-7, -3)$"
+                },
+                correct: "C",
+                explanation: "Fungsi invers mencerminkan grafik terhadap garis cermin diagonal $y = x$. Maka setiap koordinat titik $(a,b)$ pada $f(x)$ akan bertukar menjadi $(b,a)$ pada $f^{-1}(x)$."
+            },
+            {
+                id: 25,
+                category: 4,
+                title: "Soal No. 25: Sistem Persamaan Linear Parameter Fungsi",
+                prompt: "Sebuah fungsi ditentukan oleh $f(x) = ax + b$. Jika nilai dari $f(1) = 5$ dan $f^{-1}(11) = 3$, tentukanlah nilai dari jumlah konstanta $a + b$.",
+                options: {
+                    A: "$a+b = 5$",
+                    B: "$a+b = 6$",
+                    C: "$a+b = 4$",
+                    D: "$a+b = 7$"
+                },
+                correct: "A",
+                explanation: "1. Dari $f(1) = 5 \\implies a(1) + b = 5 \\implies a + b = 5$. Kita sudah langsung mendapatkan nilai $a+b = 5$ tanpa perlu mencari nilai $a$ dan $b$ terpisah!"
+            },
+            {
+                id: 26,
+                category: 4,
+                title: "Soal No. 26: Invers Fungsi Kuadrat Berdomain Terbatas",
+                prompt: "Tentukan rumus invers $f^{-1}(x)$ dari fungsi kuadrat $f(x) = x^2 - 4x + 7$ yang memiliki pembatasan domain $x \\geq 2$.",
+                options: {
+                    A: "$f^{-1}(x) = 2 + \\sqrt{x-3}$",
+                    B: "$f^{-1}(x) = 2 - \\sqrt{x-3}$",
+                    C: "$f^{-1}(x) = \\sqrt{x+4} - 7$",
+                    D: "$f^{-1}(x) = 4 + \\sqrt{x+7}$"
+                },
+                correct: "A",
+                explanation: "Ubah bentuk kuadrat ke bentuk kuadrat sempurna:<br>$y = (x-2)^2 + 3 \\implies (x-2)^2 = y - 3 \\implies x - 2 = \\sqrt{y-3}$ (karena $x \\geq 2$, pilih tanda positif).<br>Maka didapat $f^{-1}(x) = 2 + \\sqrt{x-3}$."
+            },
+            {
+                id: 27,
+                category: 4,
+                title: "Soal No. 27: Komposisi Dua Fungsi Saling Invers",
+                prompt: "Jika $f(x) = \\frac{x+3}{2}$ dan $g(x) = 2x - 3$, tentukan ekspresi tunggal yang mewakili komposisi fungsi $fg(x)$.",
+                options: {
+                    A: "$fg(x) = x$",
+                    B: "$fg(x) = 2x$",
+                    C: "$fg(x) = x+3$",
+                    D: "$fg(x) = x-3$"
+                },
+                correct: "A",
+                explanation: "Komposisi $fg(x) = f(2x-3) = \\frac{(2x-3)+3}{2} = \\frac{2x}{2} = x$. Karena hasilnya kembali menjadi $x$, terbukti bahwa kedua fungsi ini saling invers satu sama lain."
+            },
+            {
+                id: 28,
+                category: 4,
+                title: "Soal No. 28: Persamaan Parameter Invers Kuadrat",
+                prompt: "Diketahui fungsi $f(x) = x^2 + 1$. Selesaikan semua nilai $a$ yang memenuhi persamaan nilai $f^{-1}(a) = 3$.",
+                options: {
+                    A: "$a = 10$",
+                    B: "$a = 4$",
+                    C: "$a = 8$",
+                    D: "$a = 9$"
+                },
+                correct: "A",
+                explanation: "Sifat invers: $f^{-1}(a) = 3 \\iff f(3) = a$.<br>Substitusi langsung $x = 3$: $f(3) = (3)^2 + 1 = 9 + 1 = 10$. Jadi $a = 10$."
+            },
+            {
+                id: 29,
+                category: 4,
+                title: "Soal No. 29: Persamaan Teoretis Komposisi Invers",
+                prompt: "Untuk semua fungsi real ber-invers valid, selesaikan nilai persamaan aljabar berikut: $f f^{-1}(x) = f^{-1}f(5)$.",
+                options: {
+                    A: "$x = 5$",
+                    B: "$x = 0$",
+                    C: "$x = \\frac{1}{5}$",
+                    D: "Tidak dapat diselesaikan tanpa rumus $f(x)$"
+                },
+                correct: "A",
+                explanation: "Berdasarkan definisi identitas fungsi invers:<br>$f(f^{-1}(x)) = x$ dan $f^{-1}(f(y)) = y$.<br>Maka persamaan tersebut menyusut langsung menjadi $x = 5$."
+            },
+            {
+                id: 30,
+                category: 4,
+                title: "Soal No. 30: Cambridge Advanced Challenge",
+                prompt: "Cambridge Challenge: Ditentukan fungsi pecahan $f(x) = \\frac{x-1}{x+1}$. Tentukan rumus untuk komposisi berulang $ff(x)$.",
+                options: {
+                    A: "$ff(x) = -\\frac{1}{x}$",
+                    B: "$ff(x) = x$",
+                    C: "$ff(x) = \\frac{x-1}{x+1}$",
+                    D: "$ff(x) = -x$"
+                },
+                correct: "A",
+                explanation: "Substitusikan $f(x)$ ke dalam dirinya sendiri:<br>$ff(x) = \\frac{\\frac{x-1}{x+1} - 1}{\\frac{x-1}{x+1} + 1}$.<br>Kalikan pembilang & penyebut dengan $(x+1)$: <br>Pembilang: $(x-1) - (x+1) = -2$<br>Penyebut: $(x-1) + (x+1) = 2x$<br>Didapat: $\\frac{-2}{2x} = -\\frac{1}{x}$."
+            }
+        ];
+
+        // Interactive State variables
+        let currentIdx = 0; 
+        let filteredDatabase = [...questionDatabase];
+        let currentFilter = 'all';
+        let userProgress = {}; 
+        let totalXP = 0;
+
+        // Run on Page Load
+        window.onload = function() {
+            loadProgress();
+            filterCategory('all');
+            initScratchpad();
+            
+            // Keydown navigation controls
+            document.addEventListener('keydown', function(event) {
+                if (event.key === 'ArrowLeft') {
+                    navigateQuestion(-1);
+                } else if (event.key === 'ArrowRight') {
+                    navigateQuestion(1);
+                }
+            });
+        };
+
+        function loadProgress() {
+            const savedXP = localStorage.getItem('mathQuest_xp');
+            const savedProgress = localStorage.getItem('mathQuest_progress');
+            if (savedXP) totalXP = parseInt(savedXP);
+            if (savedProgress) userProgress = JSON.parse(savedProgress);
+            
+            updateStatsUI();
+        }
+
+        function saveProgress() {
+            localStorage.setItem('mathQuest_xp', totalXP);
+            localStorage.setItem('mathQuest_progress', JSON.stringify(userProgress));
+        }
+
+        // Filter categories according to selection sidebar
+        function filterCategory(cat) {
+            currentFilter = cat;
+            
+            // Update sidebar button classes
+            const categories = ['all', 1, 2, 3, 4];
+            categories.forEach(c => {
+                const btn = document.getElementById(`cat-${c}`);
+                if (c === cat) {
+                    btn.className = "w-full text-left p-3.5 rounded-2xl border-2 font-black text-xs transition flex justify-between items-center bg-indigo-600 text-white border-indigo-600 shadow-md";
+                } else {
+                    btn.className = "w-full text-left p-3.5 rounded-2xl border-2 border-slate-100 hover:border-indigo-400 font-bold text-xs transition flex justify-between items-center bg-white text-slate-700 shadow-sm";
+                }
+            });
+
+            if (cat === 'all') {
+                filteredDatabase = [...questionDatabase];
+            } else {
+                filteredDatabase = questionDatabase.filter(q => q.category === cat);
+            }
+
+            currentIdx = 0; 
+            renderPetaSoalGrid();
+            renderCurrentQuestion();
+        }
+
+        function renderPetaSoalGrid() {
+            const gridContainer = document.getElementById('petaSoalGrid');
+            gridContainer.innerHTML = ''; 
+
+            filteredDatabase.forEach((q, idx) => {
+                const btn = document.createElement('button');
+                btn.className = 'w-10 h-10 rounded-xl font-bold text-xs border-2 shadow-sm transition-all duration-200 active:scale-90 flex items-center justify-center';
+                
+                const ansState = userProgress[q.id];
+                const isActive = idx === currentIdx;
+
+                if (isActive) {
+                    btn.classList.add('ring-4', 'ring-indigo-200', 'border-indigo-600', 'font-black');
+                } else {
+                    btn.classList.add('border-slate-200');
+                }
+
+                if (ansState) {
+                    if (ansState.isCorrect) {
+                        btn.classList.add('bg-emerald-500', 'text-white', 'border-emerald-500');
+                    } else {
+                        btn.classList.add('bg-rose-500', 'text-white', 'border-rose-500');
+                    }
+                } else {
+                    btn.classList.add('bg-white', 'text-slate-500', 'hover:bg-slate-100');
+                }
+
+                btn.innerText = q.id;
+                btn.onclick = () => {
+                    currentIdx = idx;
+                    renderPetaSoalGrid();
+                    renderCurrentQuestion();
+                };
+                gridContainer.appendChild(btn);
+            });
+        }
+
+        function renderCurrentQuestion() {
+            const currentQuestion = filteredDatabase[currentIdx];
+            if (!currentQuestion) return;
+
+            // Update title
+            document.getElementById('soalNumberTitle').innerText = currentQuestion.title;
+            
+            // Set Category Badge
+            const badge = document.getElementById('currentCategoryBadge');
+            if (currentQuestion.category === 1) {
+                badge.innerText = "🟢 1. Notasi & Input-Output";
+                badge.className = "bg-sky-100 text-sky-800 text-xs px-3.5 py-1.5 rounded-xl font-black uppercase tracking-wider";
+            } else if (currentQuestion.category === 2) {
+                badge.innerText = "🔵 2. Fungsi Komposisi";
+                badge.className = "bg-fuchsia-100 text-fuchsia-800 text-xs px-3.5 py-1.5 rounded-xl font-black uppercase tracking-wider";
+            } else if (currentQuestion.category === 3) {
+                badge.innerText = "🟡 3. Fungsi Invers";
+                badge.className = "bg-orange-100 text-orange-800 text-xs px-3.5 py-1.5 rounded-xl font-black uppercase tracking-wider";
+            } else {
+                badge.innerText = "🔴 4. Analisis & HOTS";
+                badge.className = "bg-indigo-100 text-indigo-800 text-xs px-3.5 py-1.5 rounded-xl font-black uppercase tracking-wider";
+            }
+
+            // Set question content
+            document.getElementById('questionPromptContainer').innerHTML = currentQuestion.prompt;
+
+            // Load options
+            const opts = ['A', 'B', 'C', 'D'];
+            opts.forEach(opt => {
+                const optButton = document.getElementById(`option${opt}`);
+                const textSpan = optButton.querySelector('.option-text');
+                textSpan.innerHTML = `${opt}. ${currentQuestion.options[opt]}`;
+                
+                optButton.className = "option-button w-full text-left p-4 rounded-2xl font-bold text-sm md:text-base flex items-center gap-4 bg-white text-slate-700 shadow-sm";
+                optButton.disabled = false;
+            });
+
+            document.getElementById('btnPrev').style.visibility = currentIdx === 0 ? 'hidden' : 'visible';
+            document.getElementById('btnNext').innerText = currentIdx === filteredDatabase.length - 1 ? 'Selesai Misi 🎉' : 'Selanjutnya ▶';
+            document.getElementById('centerProgressText').innerText = `${currentIdx + 1} / ${filteredDatabase.length} Soal`;
+
+            const pastResult = userProgress[currentQuestion.id];
+            const explanationBox = document.getElementById('explanationBox');
+            
+            if (pastResult) {
+                opts.forEach(opt => {
+                    const optButton = document.getElementById(`option${opt}`);
+                    optButton.disabled = true;
+                    if (opt === currentQuestion.correct) {
+                        optButton.classList.add('correct');
+                    } else if (opt === pastResult.chosen) {
+                        optButton.classList.add('wrong');
+                    }
+                });
+                
+                explanationBox.classList.remove('hidden');
+                document.getElementById('explanationText').innerHTML = currentQuestion.explanation;
+            } else {
+                explanationBox.classList.add('hidden');
+            }
+
+            // Render equations
+            if (window.renderMathInElement) {
+                renderMathInElement(document.body, {
+                    delimiters: [
+                        {left: "$$", right: "$$", display: true},
+                        {left: "$", right: "$", display: false}
+                    ],
+                    throwOnError: false
+                });
+            }
+        }
+
+        function selectOption(chosen) {
+            const currentQuestion = filteredDatabase[currentIdx];
+            if (!currentQuestion) return;
+
+            if (userProgress[currentQuestion.id]) return;
+
+            const isCorrect = chosen === currentQuestion.correct;
+            
+            userProgress[currentQuestion.id] = {
+                answered: true,
+                chosen: chosen,
+                isCorrect: isCorrect
+            };
+
+            if (isCorrect) {
+                totalXP += 10;
+            }
+
+            saveProgress();
+            updateStatsUI();
+            
+            renderPetaSoalGrid();
+            renderCurrentQuestion();
+        }
+
+        function navigateQuestion(direction) {
+            let nextIndex = currentIdx + direction;
+            if (nextIndex >= 0 && nextIndex < filteredDatabase.length) {
+                currentIdx = nextIndex;
+                renderPetaSoalGrid();
+                renderCurrentQuestion();
+            } else if (nextIndex >= filteredDatabase.length) {
+                alert("Selamat! Misi selesai. Anda telah menyelesaikan seluruh soal latihan fungsi Cambridge!");
+            }
+        }
+
+        function updateStatsUI() {
+            let totalAnswered = 0;
+            let totalCorrect = 0;
+            let totalWrong = 0;
+
+            questionDatabase.forEach(q => {
+                if (userProgress[q.id]) {
+                    totalAnswered++;
+                    if (userProgress[q.id].isCorrect) {
+                        totalCorrect++;
+                    } else {
+                        totalWrong++;
+                    }
+                }
+            });
+
+            let accuracy = 0;
+            if (totalAnswered > 0) {
+                accuracy = Math.round((totalCorrect / totalAnswered) * 100);
+            }
+
+            document.getElementById('xpDisplay').innerText = totalXP;
+            document.getElementById('answeredCounter').innerText = `${totalAnswered}/30 Terjawab`;
+            document.getElementById('correctStat').innerText = totalCorrect;
+            document.getElementById('wrongStat').innerText = totalWrong;
+            document.getElementById('accuracyStat').innerText = `${accuracy}%`;
+        }
+
+        // Canvas Sketchpad Controls
+        let canvas, ctx;
+        let isDrawing = false;
+        let lastX = 0;
+        let lastY = 0;
+        let brushColor = '#3b82f6';
+        let brushSize = 3;
+
+        function toggleScratchpad() {
+            const modal = document.getElementById('scratchpadModal');
+            modal.classList.toggle('hidden');
+            
+            if (!modal.classList.contains('hidden')) {
+                setTimeout(() => {
+                    const canvasContainer = canvas.parentNode;
+                    canvas.width = canvasContainer.clientWidth;
+                    canvas.height = canvasContainer.clientHeight;
+                    
+                    ctx.lineJoin = 'round';
+                    ctx.lineCap = 'round';
+                    ctx.strokeStyle = brushColor;
+                    ctx.lineWidth = brushSize;
+                }, 100);
+            }
+        }
+
+        function initScratchpad() {
+            canvas = document.getElementById('scratchpadCanvas');
+            ctx = canvas.getContext('2d');
+
+            canvas.addEventListener('mousedown', (e) => {
+                isDrawing = true;
+                [lastX, lastY] = [e.offsetX, e.offsetY];
+            });
+            canvas.addEventListener('mousemove', draw);
+            canvas.addEventListener('mouseup', () => isDrawing = false);
+            canvas.addEventListener('mouseout', () => isDrawing = false);
+
+            canvas.addEventListener('touchstart', (e) => {
+                isDrawing = true;
+                const r = canvas.getBoundingClientRect();
+                lastX = e.touches[0].clientX - r.left;
+                lastY = e.touches[0].clientY - r.top;
+                e.preventDefault();
+            }, { passive: false });
+
+            canvas.addEventListener('touchmove', (e) => {
+                if (!isDrawing) return;
+                const r = canvas.getBoundingClientRect();
+                const x = e.touches[0].clientX - r.left;
+                const y = e.touches[0].clientY - r.top;
+                
+                ctx.beginPath();
+                ctx.moveTo(lastX, lastY);
+                ctx.lineTo(x, y);
+                ctx.stroke();
+                
+                [lastX, lastY] = [x, y];
+                e.preventDefault();
+            }, { passive: false });
+
+            canvas.addEventListener('touchend', () => isDrawing = false);
+        }
+
+        function draw(e) {
+            if (!isDrawing) return;
+            ctx.beginPath();
+            ctx.moveTo(lastX, lastY);
+            ctx.lineTo(e.offsetX, e.offsetY);
+            ctx.stroke();
+            [lastX, lastY] = [e.offsetX, e.offsetY];
+        }
+
+        function setBrushColor(color) {
+            brushColor = color;
+            ctx.strokeStyle = brushColor;
+        }
+
+        function setBrushSize(size) {
+            brushSize = size;
+            ctx.lineWidth = brushSize;
+        }
+
+        function clearCanvas() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+        }
+    </script>
+</body>
+</html>
